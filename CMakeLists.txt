@@ -26,23 +26,26 @@ endif()
 
 project ("RaylibNatureOfCode")
 
-add_executable (${PROJECT_NAME} "RaylibNatureOfCode.cpp" "utility/Math.h")
+add_executable (${PROJECT_NAME} "RaylibNatureOfCode.cpp" "utility/Math.h" "utility/PathFinder.h" "utility/PathFinder.cpp" "utility/CommonType.h")
 target_link_libraries(${PROJECT_NAME} raylib)
 
-add_executable ("Chapter1" "Playground1.cpp" "utility/Math.h" "utility/Math.cpp")
+add_executable ("Chapter1" "Playground1.cpp" "utility/Math.h" "utility/Math.cpp" "utility/PathFinder.h" "utility/PathFinder.cpp" "utility/CommonType.h")
 target_link_libraries("Chapter1" raylib)
 
-add_executable ("Chapter2" "Playground2.cpp" "utility/Math.h" "utility/Math.cpp")
+add_executable ("Chapter2" "Playground2.cpp" "utility/Math.h" "utility/Math.cpp" "utility/PathFinder.h" "utility/PathFinder.cpp" "utility/CommonType.h")
 target_link_libraries("Chapter2" raylib)
 
-add_executable ("Chapter3" "Playground3.cpp" "utility/Math.h" "utility/Math.cpp")
+add_executable ("Chapter3" "Playground3.cpp" "utility/Math.h" "utility/Math.cpp" "utility/PathFinder.h" "utility/PathFinder.cpp" "utility/CommonType.h")
 target_link_libraries("Chapter3" raylib)
 
-add_executable ("Chapter4" "Playground4.cpp" "utility/Math.h" "utility/Math.cpp")
+add_executable ("Chapter4" "Playground4.cpp" "utility/Math.h" "utility/Math.cpp" "utility/PathFinder.h" "utility/PathFinder.cpp" "utility/CommonType.h")
 target_link_libraries("Chapter4" raylib)
 
-add_executable ("Chapter5" "Playground5.cpp" "utility/Math.h" "utility/Math.cpp")
+add_executable ("Chapter5" "Playground5.cpp" "utility/Math.h" "utility/Math.cpp" "utility/PathFinder.h" "utility/PathFinder.cpp" "utility/CommonType.h")
 target_link_libraries("Chapter5" raylib)
+
+add_executable ("Chapter6" "Playground6.cpp" "utility/Math.h" "utility/Math.cpp" "utility/PathFinder.h" "utility/PathFinder.cpp" "utility/CommonType.h")
+target_link_libraries("Chapter6" raylib)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET RaylibNatureOfCode PROPERTY CXX_STANDARD 20)
@@ -51,6 +54,7 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Chapter3 PROPERTY CXX_STANDARD 20)
   set_property(TARGET Chapter4 PROPERTY CXX_STANDARD 20)
   set_property(TARGET Chapter5 PROPERTY CXX_STANDARD 20)
+  set_property(TARGET Chapter6 PROPERTY CXX_STANDARD 20)
 endif()
 
 # Web Configurations

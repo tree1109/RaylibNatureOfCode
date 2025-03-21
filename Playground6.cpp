@@ -29,8 +29,6 @@ public:
 
     void Update()
     {
-        WallBounce();
-
         // Limit the velocity.
         if (Vector2Length(m_velocity) >= 500.0f)
         {
@@ -40,12 +38,22 @@ public:
         m_velocity += m_acceleration * GetFrameTime();
         m_position += m_velocity * GetFrameTime();
 
+        m_angularVelocity += m_angularAcceleration * GetFrameTime();
+        m_angle += m_angularVelocity * GetFrameTime();
+
         m_acceleration = Vector2Zeros;
+        m_angularAcceleration = 0.0f;
     }
 
     void Draw() const
     {
-        DrawCircleLinesV(m_position, GetRadius(m_mass), BLACK);
+        const float radius = GetRadius(m_mass);
+        DrawCircleLinesV(m_position, radius, BLACK);
+
+        Vector2 end = Vector2{ radius, 0.0f };
+        end = Vector2Rotate(end, m_angle);
+        end += m_position;
+        DrawLineV(m_position, end, BLACK);
     }
 
     void ApplyForce(const Vector2& force)
@@ -69,36 +77,13 @@ public:
         return force;
     }
 
-    void WallBounce()
-    {
-        const float radius = GetRadius(m_mass);
-
-        if (m_position.x + radius > GetScreenWidth())
-        {
-            m_position.x = GetScreenWidth() - radius;
-            m_velocity.x *= -0.9f;
-        }
-        else if (m_position.x - radius < 0.0f)
-        {
-            m_position.x = radius;
-            m_velocity.x *= -0.9f;
-        }
-        if (m_position.y + radius > GetScreenHeight())
-        {
-            m_position.y = GetScreenHeight() - radius;
-            m_velocity.y *= -0.9f;
-        }
-        else if (m_position.y - radius < 0.0f)
-        {
-            m_position.y = radius;
-            m_velocity.y *= -0.9f;
-        }
-    }
-
     float m_mass = 1.0f;
     Vector2 m_position = Vector2Zeros;
     Vector2 m_velocity = Vector2Zeros;
     Vector2 m_acceleration = Vector2Zeros;
+    float m_angle = 0.0f;
+    float m_angularVelocity = 0.0f;
+    float m_angularAcceleration = 0.0f;
 };
 
 int32_t main()
@@ -116,37 +101,11 @@ int32_t main()
     Vector2 center = { windowWidth * 0.5f , windowHeight * 0.5f };
 
     std::vector<Body> movers;
-    // Random.
-    if (false) {
-        for (int32_t i = 0; i < 100; ++i)
-        {
-            Vector2 pos = Vector2(GetRandomValue(0, windowWidth), GetRandomValue(0, windowHeight));
-            movers.emplace_back(pos, GetRandomValue(10, 100));
-        }
-    }
-    // Two body.
-    if (false)
+    for (int32_t i = 0; i < 100; ++i)
     {
-        constexpr float offset = 10.0f;
-        movers.emplace_back(center + Vector2{0.0f, offset}, 100.0f);
-        movers.emplace_back(center + Vector2{0.0f, -offset}, 100.0f);
-        movers[0].m_velocity = Vector2{ 5.0f, 0.0f };
-        movers[1].m_velocity = Vector2{ -5.0f, 0.0f };
+        Vector2 pos = Vector2(GetRandomValue(0, windowWidth), GetRandomValue(0, windowHeight));
+        movers.emplace_back(pos, GetRandomValue(10, 100));
     }
-    // Galaxy.
-    if (true)
-    {
-        for (int32_t i = 0; i < 100; ++i)
-        {
-            Vector2 pos = Vector2Rotate(Vector2UnitX, math::GetRandomValue(0.0f, PI * 2.0f)) * GetRandomValue(10, 200);
-            pos += center;
-            movers.emplace_back(pos, GetRandomValue(10, 100));
-            Vector2 direction = Vector2Rotate(center - pos, 90.0f * DEG2RAD);
-            float distance = Vector2Length(center - pos);
-            movers.back().m_velocity = direction * 10.0f / distance;
-        }
-    }
-
     while (!WindowShouldClose())
     {
         const float time = GetTime();
@@ -168,6 +127,8 @@ int32_t main()
 
             for (auto& mover : movers)
             {
+                mover.m_angularVelocity = mover.m_acceleration.x;
+
                 mover.Update();
             }
         }
