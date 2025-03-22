@@ -15,6 +15,7 @@ namespace math {
     float PeringNoise(float x);
 
     Vector2 GetRandomVector2();
+    float GetAngle(const Vector2& direction);
 }
 
 #endif // !INCLUDE_MATH_H
