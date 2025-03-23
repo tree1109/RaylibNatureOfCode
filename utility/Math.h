@@ -16,6 +16,8 @@ namespace math {
 
     Vector2 GetRandomVector2();
     float GetAngle(const Vector2& direction);
+
+    Vector2 GetSpringForce(const Vector2& bobPos, const Vector2& anchorPos, const float restLength, const float k);
 }
 
 #endif // !INCLUDE_MATH_H

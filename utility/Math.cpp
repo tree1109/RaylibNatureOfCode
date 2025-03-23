@@ -70,3 +70,12 @@ Vector2 math::GetRandomVector2()
     float rad = dist(gen);
     return Vector2(std::cosf(rad), std::sinf(rad));
 }
+
+Vector2 math::GetSpringForce(const Vector2& bobPos, const Vector2& anchorPos, const float restLength, const float k)
+{
+    const Vector2 spring = bobPos - anchorPos;
+    const float distance = Vector2Length(spring);
+    const float stretch = distance - restLength;
+    const Vector2 force = Vector2Normalize(spring) * -k * stretch;
+    return force;
+}
