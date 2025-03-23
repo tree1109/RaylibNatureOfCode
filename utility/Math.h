@@ -18,6 +18,8 @@ namespace math {
     float GetAngle(const Vector2& direction);
 
     Vector2 GetSpringForce(const Vector2& bobPos, const Vector2& anchorPos, const float restLength, const float k);
+
+    Vector2 TranslateWorldSpaceToScreenSpace(Vector2 posInWorld, Camera);
 }
 
 #endif // !INCLUDE_MATH_H

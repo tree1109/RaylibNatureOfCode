@@ -6,7 +6,7 @@
 #include <raylib.h>
 
 namespace tool {
-    void DrawCoordinateChecker(const Vector2& origin, const float time);
+    void DrawReferenceCoordinate(const Vector2& origin, const float time);
 }
 
 #endif // !INCLUDE_TOOL_H
