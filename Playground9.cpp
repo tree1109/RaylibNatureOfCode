@@ -274,7 +274,7 @@ int32_t main()
             {
                 if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
                 {
-                    //movers.back().Position = ;
+                    //movers.back().Position = GetMousePosition();
                     //movers.back().Velocity = Vector2Zeros;
                     const Vector2 dragForce = (GetMousePosition() - movers.back().Position) * 100.0f;
                     movers.back().ApplyForce(dragForce);

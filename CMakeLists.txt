@@ -61,7 +61,7 @@ RaylibOtherPlatform(${PROJECT_NAME})
 message(STATUS "Add executable: ${PROJECT_NAME}")
 
 # Playground executables.
-set(PLAYGROUND_LIST 1 2 3 4 5 6 7 8 9)
+set(PLAYGROUND_LIST 1 2 3 4 5 6 7 8 9 10)
 foreach(NUM ${PLAYGROUND_LIST})
     set(EXECUTABLE_NAME "Playground${NUM}")
     MyAddExecutable(${EXECUTABLE_NAME} ${UTILITY_SRC})
