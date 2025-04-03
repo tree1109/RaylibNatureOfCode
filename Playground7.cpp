@@ -9,82 +9,86 @@
 #include "utility/Math.h"
 
 #include "utility/PathFinder.h"
-class SpaceShip
+
+namespace
 {
-public:
-    SpaceShip() = default;
-
-    SpaceShip(Vector2 position)
-        : m_position(position)
+    class SpaceShip
     {
-    }
+    public:
+        SpaceShip() = default;
 
-    void Update()
-    {
-        m_isThrusting = Vector2LengthSqr(m_acceleration) > 0.0f;
-
-        // Limit the velocity.
-        if (Vector2Length(m_velocity) >= 500.0f)
+        SpaceShip(Vector2 position)
+            : m_position(position)
         {
-            m_velocity = Vector2Normalize(m_velocity) * 500.0f;
         }
 
-        m_velocity += m_acceleration * GetFrameTime();
-        m_position += m_velocity * GetFrameTime();
-
-        m_angularVelocity += m_angularAcceleration * GetFrameTime();
-        m_angle += m_angularVelocity * GetFrameTime();
-
-        m_acceleration = Vector2Zeros;
-        m_angularAcceleration = 0.0f;
-    }
-
-    void Draw() const
-    {
-        // Ship body.
-        constexpr float WIDTH = 50.0f;
-        constexpr float HEIGHT = 60.0f;
-        Vector2 front = Vector2{ HEIGHT * 0.5f, 0.0f };
-        Vector2 back = Vector2{ -HEIGHT * 0.5f, -WIDTH * 0.5f };
-        Vector2 back2 = Vector2{ -HEIGHT * 0.5f, WIDTH * 0.5f };
-        front = Vector2Rotate(front, m_angle);
-        back = Vector2Rotate(back, m_angle);
-        back2 = Vector2Rotate(back2, m_angle);
-        front += m_position;
-        back += m_position;
-        back2 += m_position;
-        DrawTriangleLines(front, back, back2, BLACK);
-
-        // Thrust.
-        if (m_isThrusting)
+        void Update()
         {
-            constexpr float RADIUS = 20.0f;
-            Vector2 thrust = Vector2{ -HEIGHT * 0.5f, 0.0f };
-            thrust = Vector2Rotate(thrust, m_angle);
-            thrust += m_position;
-            DrawCircleLinesV(thrust, RADIUS, ORANGE);
+            m_isThrusting = Vector2LengthSqr(m_acceleration) > 0.0f;
+
+            // Limit the velocity.
+            if (Vector2Length(m_velocity) >= 500.0f)
+            {
+                m_velocity = Vector2Normalize(m_velocity) * 500.0f;
+            }
+
+            m_velocity += m_acceleration * GetFrameTime();
+            m_position += m_velocity * GetFrameTime();
+
+            m_angularVelocity += m_angularAcceleration * GetFrameTime();
+            m_angle += m_angularVelocity * GetFrameTime();
+
+            m_acceleration = Vector2Zeros;
+            m_angularAcceleration = 0.0f;
         }
-    }
 
-    void ApplyForce(const Vector2& force)
-    {
-        m_acceleration += force;
-    }
+        void Draw() const
+        {
+            // Ship body.
+            constexpr float WIDTH = 50.0f;
+            constexpr float HEIGHT = 60.0f;
+            Vector2 front = Vector2{ HEIGHT * 0.5f, 0.0f };
+            Vector2 back = Vector2{ -HEIGHT * 0.5f, -WIDTH * 0.5f };
+            Vector2 back2 = Vector2{ -HEIGHT * 0.5f, WIDTH * 0.5f };
+            front = Vector2Rotate(front, m_angle);
+            back = Vector2Rotate(back, m_angle);
+            back2 = Vector2Rotate(back2, m_angle);
+            front += m_position;
+            back += m_position;
+            back2 += m_position;
+            DrawTriangleLines(front, back, back2, BLACK);
 
-    void ApplyTorque(float torque)
-    {
-        m_angularAcceleration += torque;
-    }
+            // Thrust.
+            if (m_isThrusting)
+            {
+                constexpr float RADIUS = 20.0f;
+                Vector2 thrust = Vector2{ -HEIGHT * 0.5f, 0.0f };
+                thrust = Vector2Rotate(thrust, m_angle);
+                thrust += m_position;
+                DrawCircleLinesV(thrust, RADIUS, ORANGE);
+            }
+        }
 
-    Vector2 m_position = Vector2Zeros;
-    Vector2 m_velocity = Vector2Zeros;
-    Vector2 m_acceleration = Vector2Zeros;
-    float m_angle = 0.0f;
-    float m_angularVelocity = 0.0f;
-    float m_angularAcceleration = 0.0f;
+        void ApplyForce(const Vector2& force)
+        {
+            m_acceleration += force;
+        }
 
-    bool m_isThrusting = false;
-};
+        void ApplyTorque(float torque)
+        {
+            m_angularAcceleration += torque;
+        }
+
+        Vector2 m_position = Vector2Zeros;
+        Vector2 m_velocity = Vector2Zeros;
+        Vector2 m_acceleration = Vector2Zeros;
+        float m_angle = 0.0f;
+        float m_angularVelocity = 0.0f;
+        float m_angularAcceleration = 0.0f;
+
+        bool m_isThrusting = false;
+    };
+}
 
 int32_t main()
 {

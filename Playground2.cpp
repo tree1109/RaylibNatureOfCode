@@ -5,87 +5,90 @@
 
 #include "utility/Math.h"
 
-class Body
+namespace
 {
-public:
-    Body()
+    class Body
     {
-    }
+    public:
+        Body()
+        {
+        }
 
-    void Update()
-    {
-        // Control.
-        if (false) {
-            if (IsKeyDown(KEY_W))
-            {
-                m_acceleration.y -= 100.0f * GetFrameTime();
+        void Update()
+        {
+            // Control.
+            if (false) {
+                if (IsKeyDown(KEY_W))
+                {
+                    m_acceleration.y -= 100.0f * GetFrameTime();
+                }
+                if (IsKeyDown(KEY_S))
+                {
+                    m_acceleration.y += 100.0f * GetFrameTime();
+                }
+                if (IsKeyDown(KEY_A))
+                {
+                    m_acceleration.x -= 100.0f * GetFrameTime();
+                }
+                if (IsKeyDown(KEY_D))
+                {
+                    m_acceleration.x += 100.0f * GetFrameTime();
+                }
             }
-            if (IsKeyDown(KEY_S))
-            {
-                m_acceleration.y += 100.0f * GetFrameTime();
+
+            // Random.
+            if (false) {
+                m_acceleration = math::GetRandomVector2() * GetRandomValue(0, 1000);
             }
-            if (IsKeyDown(KEY_A))
-            {
-                m_acceleration.x -= 100.0f * GetFrameTime();
+
+            // Towards the mouse.
+            if (false) {
+                auto mouseVector = GetMousePosition() - m_position;
+                m_acceleration = mouseVector / (1.0f + Vector2Length(mouseVector));
+                m_acceleration *= 1000.0f;
             }
-            if (IsKeyDown(KEY_D))
+
+            // Limit the velocity.
+            if (Vector2Length(m_velocity) >= 500.0f)
             {
-                m_acceleration.x += 100.0f * GetFrameTime();
+                m_velocity = Vector2Normalize(m_velocity) * 500.0f;
+            }
+
+            m_velocity += m_acceleration * GetFrameTime();
+            m_position += m_velocity * GetFrameTime();
+            //CheckEdge();
+        }
+
+        void Draw() const
+        {
+            DrawCircleV(m_position, 4.0f, BLACK);
+        }
+
+        void CheckEdge()
+        {
+            if (m_position.x > GetScreenWidth())
+            {
+                m_position.x -= GetScreenWidth();
+            }
+            else if (m_position.x < 0.0f)
+            {
+                m_position.x += GetScreenWidth();
+            }
+            if (m_position.y > GetScreenHeight())
+            {
+                m_position.y -= GetScreenHeight();
+            }
+            else if (m_position.y < 0.0f)
+            {
+                m_position.y += GetScreenHeight();
             }
         }
 
-        // Random.
-        if (false) {
-            m_acceleration = math::GetRandomVector2() * GetRandomValue(0, 1000);
-        }
-
-        // Towards the mouse.
-        if (false) {
-            auto mouseVector = GetMousePosition() - m_position;
-            m_acceleration = mouseVector / ( 1.0f + Vector2Length(mouseVector));
-            m_acceleration *= 1000.0f;
-        }
-
-        // Limit the velocity.
-        if (Vector2Length(m_velocity) >= 500.0f)
-        {
-            m_velocity = Vector2Normalize(m_velocity) * 500.0f;
-        }
-
-        m_velocity += m_acceleration * GetFrameTime();
-        m_position += m_velocity * GetFrameTime();
-        //CheckEdge();
-    }
-
-    void Draw() const
-    {
-        DrawCircleV(m_position, 4.0f, BLACK);
-    }
-
-    void CheckEdge()
-    {
-        if (m_position.x > GetScreenWidth())
-        {
-            m_position.x -= GetScreenWidth();
-        }
-        else if (m_position.x < 0.0f)
-        {
-            m_position.x += GetScreenWidth();
-        }
-        if (m_position.y > GetScreenHeight())
-        {
-            m_position.y -= GetScreenHeight();
-        }
-        else if (m_position.y < 0.0f)
-        {
-            m_position.y += GetScreenHeight();
-        }
-    }
-
-    Vector2 m_position = Vector2Zeros;
-    Vector2 m_velocity = Vector2Zeros;
-    Vector2 m_acceleration = Vector2Zeros;
-};
+        Vector2 m_position = Vector2Zeros;
+        Vector2 m_velocity = Vector2Zeros;
+        Vector2 m_acceleration = Vector2Zeros;
+    };
+}
 
 int32_t main()
 {

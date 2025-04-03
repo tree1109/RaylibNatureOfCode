@@ -10,61 +10,64 @@
 
 #include "utility/PathFinder.h"
 
-class Oscillator
+namespace
 {
-public:
-    Oscillator(Vector2 originPosition)
-        : m_originPosition(originPosition)
+    class Oscillator
     {
-    }
+    public:
+        Oscillator(Vector2 originPosition)
+            : m_originPosition(originPosition)
+        {
+        }
 
-    void SetAngle(const Vector2& angle)
-    {
-        m_angle = angle;
-    }
+        void SetAngle(const Vector2& angle)
+        {
+            m_angle = angle;
+        }
 
-    void SetRandomAngle()
-    {
-        m_angle = Vector2{ math::GetRandomValue(0.0f, 2.0f * PI), math::GetRandomValue(0.0f, 2.0f * PI) };
-    }
+        void SetRandomAngle()
+        {
+            m_angle = Vector2{ math::GetRandomValue(0.0f, 2.0f * PI), math::GetRandomValue(0.0f, 2.0f * PI) };
+        }
 
-    void SetAmplitude(const Vector2& amplitude)
-    {
-        m_amplitude = amplitude;
-    }
+        void SetAmplitude(const Vector2& amplitude)
+        {
+            m_amplitude = amplitude;
+        }
 
-    void SetAngularVelocity(const Vector2& angularVelocity)
-    {
-        m_angularVelocity = angularVelocity;
-    }
+        void SetAngularVelocity(const Vector2& angularVelocity)
+        {
+            m_angularVelocity = angularVelocity;
+        }
 
-    void SetColor(const Color& circleColor, const Color& lineColor)
-    {
-        m_circleColor = circleColor;
-        m_lineColor = lineColor;
-    }
+        void SetColor(const Color& circleColor, const Color& lineColor)
+        {
+            m_circleColor = circleColor;
+            m_lineColor = lineColor;
+        }
 
-    void Update()
-    {
-        m_angle += m_angularVelocity * GetFrameTime();
-        m_position = m_originPosition + m_amplitude * Vector2{ std::sin(m_angle.x), std::sin(m_angle.y) };
-    }
+        void Update()
+        {
+            m_angle += m_angularVelocity * GetFrameTime();
+            m_position = m_originPosition + m_amplitude * Vector2{ std::sin(m_angle.x), std::sin(m_angle.y) };
+        }
 
-    void Draw() const
-    {
-        DrawLineV(m_originPosition, m_position, m_lineColor);
-        DrawCircleLinesV(m_position, 10.0f, m_circleColor);
-    }
+        void Draw() const
+        {
+            DrawLineV(m_originPosition, m_position, m_lineColor);
+            DrawCircleLinesV(m_position, 10.0f, m_circleColor);
+        }
 
-    Vector2 m_originPosition;
-    Vector2 m_position = { 0.0f, 0.0f };
-    Vector2 m_amplitude = { 100.0f, 100.0f };
-    Vector2 m_angle = { 0.0f, 0.0f };
-    Vector2 m_angularVelocity = { 0.0f, 0.0f };
+        Vector2 m_originPosition;
+        Vector2 m_position = { 0.0f, 0.0f };
+        Vector2 m_amplitude = { 100.0f, 100.0f };
+        Vector2 m_angle = { 0.0f, 0.0f };
+        Vector2 m_angularVelocity = { 0.0f, 0.0f };
 
-    Color m_circleColor = BLACK;
-    Color m_lineColor = BLACK;
-};
+        Color m_circleColor = BLACK;
+        Color m_lineColor = BLACK;
+    };
+}
 
 int32_t main()
 {

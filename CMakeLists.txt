@@ -50,10 +50,9 @@ function(MyAddExecutable EXECUTABLE_NAME)
 endfunction()
 
 # Utility source files.
-file(GLOB UTILITY_SRC
-    "${PROJECT_SOURCE_DIR}/utility/*.cpp"
-    "${PROJECT_SOURCE_DIR}/utility/*.h"
-)
+file(GLOB UTILITY_SRC_H "${PROJECT_SOURCE_DIR}/utility/*.h")
+file(GLOB UTILITY_SRC_CPP "${PROJECT_SOURCE_DIR}/utility/*.cpp")
+set(UTILITY_SRC ${UTILITY_SRC_H} ${UTILITY_SRC_CPP})
 
 # Main executable.
 MyAddExecutable(${PROJECT_NAME} ${UTILITY_SRC})

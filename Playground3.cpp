@@ -8,159 +8,162 @@
 
 #include "utility/Math.h"
 
-class Body
+namespace
 {
-public:
-    Body() = default;
-
-    Body(Vector2 position, float mass)
-        : m_position(position)
-        , m_mass(mass)
+    class Body
     {
-    }
+    public:
+        Body() = default;
 
-    void Update()
-    {
-        WallBounce();
-        //WallForce();
-
-        const bool contactGround = m_position.y + GetRadius() >= GetScreenHeight() - 1.0f;
-        if (contactGround)
+        Body(Vector2 position, float mass)
+            : m_position(position)
+            , m_mass(mass)
         {
-            const float c = 0.1f;
-            const float normal = m_mass * 9.8f;
-            const float frictionSize = c * normal;
-            Vector2 friction = Vector2Normalize(m_velocity) * -1.0f * frictionSize;
-            ApplyForce(friction);
         }
 
-
-        // Limit the velocity.
-        if (Vector2Length(m_velocity) >= 500.0f)
+        void Update()
         {
-            m_velocity = Vector2Normalize(m_velocity) * 500.0f;
+            WallBounce();
+            //WallForce();
+
+            const bool contactGround = m_position.y + GetRadius() >= GetScreenHeight() - 1.0f;
+            if (contactGround)
+            {
+                const float c = 0.1f;
+                const float normal = m_mass * 9.8f;
+                const float frictionSize = c * normal;
+                Vector2 friction = Vector2Normalize(m_velocity) * -1.0f * frictionSize;
+                ApplyForce(friction);
+            }
+
+
+            // Limit the velocity.
+            if (Vector2Length(m_velocity) >= 500.0f)
+            {
+                m_velocity = Vector2Normalize(m_velocity) * 500.0f;
+            }
+
+            m_velocity += m_acceleration * GetFrameTime();
+            m_position += m_velocity * GetFrameTime();
+
+            m_acceleration = Vector2Zeros;
         }
 
-        m_velocity += m_acceleration * GetFrameTime();
-        m_position += m_velocity * GetFrameTime();
-
-        m_acceleration = Vector2Zeros;
-    }
-
-    void Draw() const
-    {
-        DrawCircleLinesV(m_position, GetRadius(), BLACK);
-    }
-
-    void ApplyForce(const Vector2& force)
-    {
-        m_acceleration += force / m_mass;
-    }
-
-    void WallBounce()
-    {
-        if (m_position.x + GetRadius() > GetScreenWidth())
+        void Draw() const
         {
-            m_position.x = GetScreenWidth() - GetRadius();
-            m_velocity.x *= -0.9f;
+            DrawCircleLinesV(m_position, GetRadius(), BLACK);
         }
-        else if (m_position.x - GetRadius() < 0.0f)
-        {
-            m_position.x = GetRadius();
-            m_velocity.x *= -0.9f;
-        }
-        if (m_position.y + GetRadius() > GetScreenHeight())
-        {
-            m_position.y = GetScreenHeight() - GetRadius();
-            m_velocity.y *= -0.9f;
-        }
-        else if (m_position.y - GetRadius() < 0.0f)
-        {
-            m_position.y = GetRadius();
-            m_velocity.y *= -0.9f;
-        }
-    }
 
-    void WallForce()
+        void ApplyForce(const Vector2& force)
+        {
+            m_acceleration += force / m_mass;
+        }
+
+        void WallBounce()
+        {
+            if (m_position.x + GetRadius() > GetScreenWidth())
+            {
+                m_position.x = GetScreenWidth() - GetRadius();
+                m_velocity.x *= -0.9f;
+            }
+            else if (m_position.x - GetRadius() < 0.0f)
+            {
+                m_position.x = GetRadius();
+                m_velocity.x *= -0.9f;
+            }
+            if (m_position.y + GetRadius() > GetScreenHeight())
+            {
+                m_position.y = GetScreenHeight() - GetRadius();
+                m_velocity.y *= -0.9f;
+            }
+            else if (m_position.y - GetRadius() < 0.0f)
+            {
+                m_position.y = GetRadius();
+                m_velocity.y *= -0.9f;
+            }
+        }
+
+        void WallForce()
+        {
+            const float leftDistance = m_position.x - GetRadius();
+            const float rightDistance = GetScreenWidth() - m_position.x - GetRadius();
+            const float topDistance = m_position.y - GetRadius();
+            const float bottomDistance = GetScreenHeight() - m_position.y - GetRadius();
+
+            const float wallForceDistance = 64.0f;
+            const float wallForce = 100.0f * m_mass;
+            // wall force, more closer, more force.
+            if (leftDistance < wallForceDistance)
+            {
+                float wallForceFactor = 1.0f - leftDistance / wallForceDistance;
+                Vector2 force = Vector2(wallForce * wallForceFactor, 0.0f);
+                ApplyForce(force);
+            }
+            if (rightDistance < wallForceDistance)
+            {
+                float wallForceFactor = 1.0f - rightDistance / wallForceDistance;
+                Vector2 force = Vector2(-wallForce * wallForceFactor, 0.0f);
+                ApplyForce(force);
+            }
+            if (topDistance < wallForceDistance)
+            {
+                float wallForceFactor = 1.0f - topDistance / wallForceDistance;
+                Vector2 force = Vector2(0.0f, wallForce * wallForceFactor);
+                ApplyForce(force);
+            }
+            if (bottomDistance < wallForceDistance)
+            {
+                float wallForceFactor = 1.0f - bottomDistance / wallForceDistance;
+                Vector2 force = Vector2(0.0f, -wallForce * wallForceFactor);
+                ApplyForce(force);
+            }
+        }
+
+        float GetRadius() const
+        {
+            return m_mass * 4.0f;
+        }
+
+        float m_mass = 1.0f;
+        Vector2 m_position = Vector2Zeros;
+        Vector2 m_velocity = Vector2Zeros;
+        Vector2 m_acceleration = Vector2Zeros;
+    };
+
+    class Liquid
     {
-        const float leftDistance = m_position.x - GetRadius();
-        const float rightDistance = GetScreenWidth() - m_position.x - GetRadius();
-        const float topDistance = m_position.y - GetRadius();
-        const float bottomDistance = GetScreenHeight() - m_position.y - GetRadius();
-
-        const float wallForceDistance = 64.0f;
-        const float wallForce = 100.0f * m_mass;
-        // wall force, more closer, more force.
-        if (leftDistance < wallForceDistance)
+    public:
+        Liquid(Vector2 position, Vector2 size, float c)
         {
-            float wallForceFactor = 1.0f - leftDistance / wallForceDistance;
-            Vector2 force = Vector2(wallForce * wallForceFactor, 0.0f);
-            ApplyForce(force);
+            m_rect.x = position.x - size.x * 0.5f;
+            m_rect.y = position.y - size.y * 0.5f;
+            m_rect.width = size.x;
+            m_rect.height = size.y;
+            m_c = c;
         }
-        if (rightDistance < wallForceDistance)
+
+        bool IsContract(const Body& mover)
         {
-            float wallForceFactor = 1.0f - rightDistance / wallForceDistance;
-            Vector2 force = Vector2(-wallForce * wallForceFactor, 0.0f);
-            ApplyForce(force);
+            return CheckCollisionCircleRec(mover.m_position, mover.GetRadius(), m_rect);
         }
-        if (topDistance < wallForceDistance)
+
+        Vector2 CalculateDragForce(const Body& mover)
         {
-            float wallForceFactor = 1.0f - topDistance / wallForceDistance;
-            Vector2 force = Vector2(0.0f, wallForce * wallForceFactor);
-            ApplyForce(force);
+            const float speed = Vector2Length(mover.m_velocity);
+            const float dragMagnitude = m_c * speed * speed;
+            Vector2 dragForce = Vector2Negate(Vector2Normalize(mover.m_velocity)) * dragMagnitude;
+            return dragForce;
         }
-        if (bottomDistance < wallForceDistance)
+
+        void Draw() const
         {
-            float wallForceFactor = 1.0f - bottomDistance / wallForceDistance;
-            Vector2 force = Vector2(0.0f, -wallForce * wallForceFactor);
-            ApplyForce(force);
+            DrawRectangleLinesEx(m_rect, 1.0f, BLUE);
         }
-    }
 
-    float GetRadius() const
-    {
-        return m_mass * 4.0f;
-    }
-
-    float m_mass = 1.0f;
-    Vector2 m_position = Vector2Zeros;
-    Vector2 m_velocity = Vector2Zeros;
-    Vector2 m_acceleration = Vector2Zeros;
-};
-
-class Liquid
-{
-public:
-    Liquid(Vector2 position, Vector2 size, float c)
-    {
-        m_rect.x = position.x - size.x * 0.5f;
-        m_rect.y = position.y - size.y * 0.5f;
-        m_rect.width = size.x;
-        m_rect.height = size.y;
-        m_c = c;
-    }
-
-    bool IsContract(const Body& mover)
-    {
-        return CheckCollisionCircleRec(mover.m_position, mover.GetRadius(), m_rect);
-    }
-
-    Vector2 CalculateDragForce(const Body& mover)
-    {
-        const float speed = Vector2Length(mover.m_velocity);
-        const float dragMagnitude = m_c * speed * speed;
-        Vector2 dragForce = Vector2Negate(Vector2Normalize(mover.m_velocity)) * dragMagnitude;
-        return dragForce;
-    }
-
-    void Draw() const
-    {
-        DrawRectangleLinesEx(m_rect, 1.0f, BLUE);
-    }
-
-    Rectangle m_rect = { 0.0f, 0.0f, 100.0f, 100.0f };
-    float m_c = 0.1f;
-};
+        Rectangle m_rect = { 0.0f, 0.0f, 100.0f, 100.0f };
+        float m_c = 0.1f;
+    };
+}
 
 int32_t main()
 {

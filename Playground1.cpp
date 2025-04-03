@@ -3,38 +3,41 @@
 
 #include "utility/Math.h"
 
-class Walker
+namespace
 {
-public:
-    Walker(Vector2 position)
-        : m_position(position)
+    class Walker
     {
-    }
+    public:
+        Walker(Vector2 position)
+            : m_position(position)
+        {
+        }
 
-    void Update()
-    {
-        m_prevPosition = m_position;
+        void Update()
+        {
+            m_prevPosition = m_position;
 
-        const float maxStep = 2.0f;
-        const float stepX = math::MapValue(math::PeringNoise(GetTime()), 0.0f, 1.0f, -maxStep, maxStep);
-        const float stepY = math::MapValue(math::PeringNoise(GetTime() + 1233.0f), 0.0f, 1.0f, -maxStep, maxStep);
-        m_position.x += stepX;
-        m_position.y += stepY;
-    }
+            const float maxStep = 2.0f;
+            const float stepX = math::MapValue(math::PeringNoise(GetTime()), 0.0f, 1.0f, -maxStep, maxStep);
+            const float stepY = math::MapValue(math::PeringNoise(GetTime() + 1233.0f), 0.0f, 1.0f, -maxStep, maxStep);
+            m_position.x += stepX;
+            m_position.y += stepY;
+        }
 
-    void Draw() const
-    {
-        DrawLineV(m_prevPosition, m_position, BLACK);
-    }
+        void Draw() const
+        {
+            DrawLineV(m_prevPosition, m_position, BLACK);
+        }
 
-    void DrawUI() const
-    {
-    }
+        void DrawUI() const
+        {
+        }
 
-private:
-    Vector2 m_position;
-    Vector2 m_prevPosition;
-};
+    private:
+        Vector2 m_position;
+        Vector2 m_prevPosition;
+    };
+}
 
 int32_t main()
 {

@@ -10,81 +10,84 @@
 
 #include "utility/PathFinder.h"
 
-static float GetRadius(float mass)
+namespace
 {
-    // Volume as mass.
-    return powf(mass / PI, 1.0f / 3.0f) * 2.0f;
-}
-
-class Body
-{
-public:
-    Body() = default;
-
-    Body(Vector2 position, float mass)
-        : m_position(position)
-        , m_mass(mass)
+    static float GetRadius(float mass)
     {
+        // Volume as mass.
+        return powf(mass / PI, 1.0f / 3.0f) * 2.0f;
     }
 
-    void Update()
+    class Body
     {
-        // Limit the velocity.
-        if (Vector2Length(m_velocity) >= 500.0f)
+    public:
+        Body() = default;
+
+        Body(Vector2 position, float mass)
+            : m_position(position)
+            , m_mass(mass)
         {
-            m_velocity = Vector2Normalize(m_velocity) * 500.0f;
         }
 
-        m_velocity += m_acceleration * GetFrameTime();
-        m_position += m_velocity * GetFrameTime();
+        void Update()
+        {
+            // Limit the velocity.
+            if (Vector2Length(m_velocity) >= 500.0f)
+            {
+                m_velocity = Vector2Normalize(m_velocity) * 500.0f;
+            }
 
-        m_angularVelocity += m_angularAcceleration * GetFrameTime();
-        m_angle += m_angularVelocity * GetFrameTime();
+            m_velocity += m_acceleration * GetFrameTime();
+            m_position += m_velocity * GetFrameTime();
 
-        m_acceleration = Vector2Zeros;
-        m_angularAcceleration = 0.0f;
-    }
+            m_angularVelocity += m_angularAcceleration * GetFrameTime();
+            m_angle += m_angularVelocity * GetFrameTime();
 
-    void Draw() const
-    {
-        const float radius = GetRadius(m_mass);
-        DrawCircleLinesV(m_position, radius, BLACK);
+            m_acceleration = Vector2Zeros;
+            m_angularAcceleration = 0.0f;
+        }
 
-        Vector2 end = Vector2{ radius, 0.0f };
-        end = Vector2Rotate(end, m_angle);
-        end += m_position;
-        DrawLineV(m_position, end, BLACK);
-    }
+        void Draw() const
+        {
+            const float radius = GetRadius(m_mass);
+            DrawCircleLinesV(m_position, radius, BLACK);
 
-    void ApplyForce(const Vector2& force)
-    {
-        m_acceleration += force / m_mass;
-    }
+            Vector2 end = Vector2{ radius, 0.0f };
+            end = Vector2Rotate(end, m_angle);
+            end += m_position;
+            DrawLineV(m_position, end, BLACK);
+        }
 
-    Vector2 GetAttractForce(const Body& mover) const
-    {
-        constexpr float G = 9.8f;
+        void ApplyForce(const Vector2& force)
+        {
+            m_acceleration += force / m_mass;
+        }
 
-        // Calculate the force of attraction.
-        Vector2 force = m_position - mover.m_position;
-        const float distance = Clamp(Vector2Length(force), 4.0f, 4096.0f);
-        force = Vector2Normalize(force);
+        Vector2 GetAttractForce(const Body& mover) const
+        {
+            constexpr float G = 9.8f;
 
-        // Calculate the strength of the force.
-        const float strength = G * m_mass * mover.m_mass / (distance * distance);
-        force *= strength;
+            // Calculate the force of attraction.
+            Vector2 force = m_position - mover.m_position;
+            const float distance = Clamp(Vector2Length(force), 4.0f, 4096.0f);
+            force = Vector2Normalize(force);
 
-        return force;
-    }
+            // Calculate the strength of the force.
+            const float strength = G * m_mass * mover.m_mass / (distance * distance);
+            force *= strength;
 
-    float m_mass = 1.0f;
-    Vector2 m_position = Vector2Zeros;
-    Vector2 m_velocity = Vector2Zeros;
-    Vector2 m_acceleration = Vector2Zeros;
-    float m_angle = 0.0f;
-    float m_angularVelocity = 0.0f;
-    float m_angularAcceleration = 0.0f;
-};
+            return force;
+        }
+
+        float m_mass = 1.0f;
+        Vector2 m_position = Vector2Zeros;
+        Vector2 m_velocity = Vector2Zeros;
+        Vector2 m_acceleration = Vector2Zeros;
+        float m_angle = 0.0f;
+        float m_angularVelocity = 0.0f;
+        float m_angularAcceleration = 0.0f;
+    };
+}
 
 int32_t main()
 {

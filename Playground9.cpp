@@ -11,190 +11,193 @@
 
 #include "utility/PathFinder.h"
 
-class Mover
+namespace
 {
-public:
-    Mover(const Vector2 position)
-        : Position(position)
+    class Mover
     {
-    }
-
-    void Update()
-    {
-
-        if (IsStatic)
+    public:
+        Mover(const Vector2 position)
+            : Position(position)
         {
-            Velocity = Vector2Zeros;
-            Acceleration = Vector2Zeros;
         }
-        else
+
+        void Update()
         {
-            const float deltaTime = GetFrameTime();
 
-            Velocity += Acceleration * deltaTime;
-            Position += Velocity * deltaTime;
-
-            Acceleration = Vector2{ 0.0f, 0.0f };
-        }
-    }
-
-    void ApplyForce(const Vector2 force)
-    {
-        Acceleration += force;
-    }
-
-    void ApplyDamping(const float damping)
-    {
-        const float speed = Vector2Length(Velocity);
-        if (speed > 0.0f)
-        {
-            const Vector2 direction = Vector2Normalize(Velocity);
-            const float force = damping * speed;
-            ApplyForce(direction * -force);
-        }
-    }
-
-    Vector2 Position = Vector2Zeros;
-    Vector2 Velocity = Vector2Zeros;
-    Vector2 Acceleration = Vector2Zeros;
-    bool IsStatic = false;
-};
-
-class AnchorSpring
-{
-public:
-    AnchorSpring(const Vector2 anchorPos, const float restLength, const float k)
-        : AnchorPos(anchorPos)
-        , RestLength(restLength)
-        , K(k)
-    {
-    }
-
-    void Update()
-    {
-        if (m_pConnectedMover == nullptr)
-        {
-            return;
-        }
-        const Vector2& bobPos = m_pConnectedMover->Position;
-        const Vector2 force = math::GetSpringForce(bobPos, AnchorPos, RestLength, K);
-        m_pConnectedMover->ApplyForce(force);
-
-        // Limit spring length.
-        {
-            const float maxLength = RestLength * 2.0f;
-            const Vector2 spring = bobPos - AnchorPos;
-            const float length = Vector2Length(spring);
-            if (length > maxLength)
+            if (IsStatic)
             {
-                const Vector2 direction = Vector2Normalize(spring);
-                const Vector2 newPos = AnchorPos + direction * maxLength;
-                m_pConnectedMover->Position = newPos;
-                m_pConnectedMover->Velocity = Vector2Zeros;
+                Velocity = Vector2Zeros;
+                Acceleration = Vector2Zeros;
+            }
+            else
+            {
+                const float deltaTime = GetFrameTime();
+
+                Velocity += Acceleration * deltaTime;
+                Position += Velocity * deltaTime;
+
+                Acceleration = Vector2{ 0.0f, 0.0f };
             }
         }
-    }
 
-    void Draw() const
-    {
-        if (m_pConnectedMover == nullptr)
+        void ApplyForce(const Vector2 force)
         {
-            return;
+            Acceleration += force;
         }
 
-        // Spring color:
-        // BLACK: rest.
-        // RED: stretched.
-        // BLUE: compressed.
-        const float distance = Vector2Distance(AnchorPos, m_pConnectedMover->Position);
-        Color springColor = 
-            distance > RestLength ? RED :
-            distance < RestLength ? BLUE :
-            BLACK;
-
-        // Anchor.
-        DrawCircleLinesV(AnchorPos, 5.0f, springColor);
-
-        // Spring.
-        DrawLineV(AnchorPos, m_pConnectedMover->Position, springColor);
-    }
-
-    void ConnectedMover(Mover* pMover)
-    {
-        m_pConnectedMover = pMover;
-    }
-
-    Vector2 AnchorPos = Vector2Zeros;
-    float RestLength = 0.0f;
-    float K = 0.0f;
-
-private:
-    Mover* m_pConnectedMover = nullptr;
-};
-
-class Spring
-{
-public:
-    Spring(const float restLength, const float k)
-        : RestLength(restLength)
-        , K(k)
-    {
-    }
-
-    void Update()
-    {
-        if (m_pConnectedMover1 == nullptr || m_pConnectedMover2 == nullptr)
+        void ApplyDamping(const float damping)
         {
-            return;
+            const float speed = Vector2Length(Velocity);
+            if (speed > 0.0f)
+            {
+                const Vector2 direction = Vector2Normalize(Velocity);
+                const float force = damping * speed;
+                ApplyForce(direction * -force);
+            }
         }
 
-        const Vector2 force = math::GetSpringForce(m_pConnectedMover2->Position, m_pConnectedMover1->Position, RestLength, K);
-        m_pConnectedMover2->ApplyForce(force);
-        m_pConnectedMover1->ApplyForce(force * -1.0f);
-    }
+        Vector2 Position = Vector2Zeros;
+        Vector2 Velocity = Vector2Zeros;
+        Vector2 Acceleration = Vector2Zeros;
+        bool IsStatic = false;
+    };
 
-    void Draw() const
+    class AnchorSpring
     {
-        if (m_pConnectedMover1 == nullptr || m_pConnectedMover2 == nullptr)
+    public:
+        AnchorSpring(const Vector2 anchorPos, const float restLength, const float k)
+            : AnchorPos(anchorPos)
+            , RestLength(restLength)
+            , K(k)
         {
-            return;
         }
 
-        // Spring color:
-        // BLACK: rest.
-        // RED: stretched.
-        // BLUE: compressed.
-        const float distance = Vector2Distance(m_pConnectedMover1->Position, m_pConnectedMover2->Position);
-        Color springColor =
-            distance > RestLength ? RED :
-            distance < RestLength ? BLUE :
-            BLACK;
-
-        // Anchor.
-        DrawCircleLinesV(AnchorPos, 5.0f, springColor);
-
-        // Spring.
-        DrawLineV(m_pConnectedMover1->Position, m_pConnectedMover2->Position, springColor);
-    }
-
-    void ConnectedMover(Mover* mover1, Mover* mover2)
-    {
-        if (mover1 == nullptr || mover2 == nullptr || mover1 == mover2)
+        void Update()
         {
-            return;
+            if (m_pConnectedMover == nullptr)
+            {
+                return;
+            }
+            const Vector2& bobPos = m_pConnectedMover->Position;
+            const Vector2 force = math::GetSpringForce(bobPos, AnchorPos, RestLength, K);
+            m_pConnectedMover->ApplyForce(force);
+
+            // Limit spring length.
+            {
+                const float maxLength = RestLength * 2.0f;
+                const Vector2 spring = bobPos - AnchorPos;
+                const float length = Vector2Length(spring);
+                if (length > maxLength)
+                {
+                    const Vector2 direction = Vector2Normalize(spring);
+                    const Vector2 newPos = AnchorPos + direction * maxLength;
+                    m_pConnectedMover->Position = newPos;
+                    m_pConnectedMover->Velocity = Vector2Zeros;
+                }
+            }
         }
-        m_pConnectedMover1 = mover1;
-        m_pConnectedMover2 = mover2;
-    }
 
-    Vector2 AnchorPos = Vector2Zeros;
-    float RestLength = 0.0f;
-    float K = 0.0f;
+        void Draw() const
+        {
+            if (m_pConnectedMover == nullptr)
+            {
+                return;
+            }
 
-private:
-    Mover* m_pConnectedMover1 = nullptr;
-    Mover* m_pConnectedMover2 = nullptr;
-};
+            // Spring color:
+            // BLACK: rest.
+            // RED: stretched.
+            // BLUE: compressed.
+            const float distance = Vector2Distance(AnchorPos, m_pConnectedMover->Position);
+            Color springColor =
+                distance > RestLength ? RED :
+                distance < RestLength ? BLUE :
+                BLACK;
+
+            // Anchor.
+            DrawCircleLinesV(AnchorPos, 5.0f, springColor);
+
+            // Spring.
+            DrawLineV(AnchorPos, m_pConnectedMover->Position, springColor);
+        }
+
+        void ConnectedMover(Mover* pMover)
+        {
+            m_pConnectedMover = pMover;
+        }
+
+        Vector2 AnchorPos = Vector2Zeros;
+        float RestLength = 0.0f;
+        float K = 0.0f;
+
+    private:
+        Mover* m_pConnectedMover = nullptr;
+    };
+
+    class Spring
+    {
+    public:
+        Spring(const float restLength, const float k)
+            : RestLength(restLength)
+            , K(k)
+        {
+        }
+
+        void Update()
+        {
+            if (m_pConnectedMover1 == nullptr || m_pConnectedMover2 == nullptr)
+            {
+                return;
+            }
+
+            const Vector2 force = math::GetSpringForce(m_pConnectedMover2->Position, m_pConnectedMover1->Position, RestLength, K);
+            m_pConnectedMover2->ApplyForce(force);
+            m_pConnectedMover1->ApplyForce(force * -1.0f);
+        }
+
+        void Draw() const
+        {
+            if (m_pConnectedMover1 == nullptr || m_pConnectedMover2 == nullptr)
+            {
+                return;
+            }
+
+            // Spring color:
+            // BLACK: rest.
+            // RED: stretched.
+            // BLUE: compressed.
+            const float distance = Vector2Distance(m_pConnectedMover1->Position, m_pConnectedMover2->Position);
+            Color springColor =
+                distance > RestLength ? RED :
+                distance < RestLength ? BLUE :
+                BLACK;
+
+            // Anchor.
+            DrawCircleLinesV(AnchorPos, 5.0f, springColor);
+
+            // Spring.
+            DrawLineV(m_pConnectedMover1->Position, m_pConnectedMover2->Position, springColor);
+        }
+
+        void ConnectedMover(Mover* mover1, Mover* mover2)
+        {
+            if (mover1 == nullptr || mover2 == nullptr || mover1 == mover2)
+            {
+                return;
+            }
+            m_pConnectedMover1 = mover1;
+            m_pConnectedMover2 = mover2;
+        }
+
+        Vector2 AnchorPos = Vector2Zeros;
+        float RestLength = 0.0f;
+        float K = 0.0f;
+
+    private:
+        Mover* m_pConnectedMover1 = nullptr;
+        Mover* m_pConnectedMover2 = nullptr;
+    };
+}
 
 int32_t main()
 {
