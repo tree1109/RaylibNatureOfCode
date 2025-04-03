@@ -99,9 +99,9 @@ void CBasicGameRunner::RunGame()
         ClearBackground(RAYWHITE);
         BeginMode2D(m_camera);
         // Draw world.
-        if (m_worldDrawCallback)
+        if (m_drawWorldCallback)
         {
-            m_worldDrawCallback();
+            m_drawWorldCallback();
         }
         EndMode2D();
         EndTextureMode();
@@ -113,9 +113,9 @@ void CBasicGameRunner::RunGame()
         // Draw UI.
         {
             // Draw UI.
-            if (m_uiDrawCallback)
+            if (m_drawUiCallback)
             {
-                m_uiDrawCallback();
+                m_drawUiCallback();
             }
 
             // Keyboard info.
@@ -161,14 +161,14 @@ void CBasicGameRunner::SetUpdateCallback(std::function<void()>&& updateCallback)
     m_updateCallback = std::move(updateCallback);
 }
 
-void CBasicGameRunner::SetWorldDrawCallback(std::function<void()>&& worldDrawCallback)
+void CBasicGameRunner::SetDrawWorldCallback(std::function<void()>&& drawWorldCallback)
 {
-    m_worldDrawCallback = std::move(worldDrawCallback);
+    m_drawWorldCallback = std::move(drawWorldCallback);
 }
 
-void CBasicGameRunner::SetUIDrawCallback(std::function<void()>&& uiDrawCallback)
+void CBasicGameRunner::SetDrawUiCallback(std::function<void()>&& drawUiCallback)
 {
-    m_uiDrawCallback = std::move(uiDrawCallback);
+    m_drawUiCallback = std::move(drawUiCallback);
 }
 
 void CBasicGameRunner::SetGameTitle(const std::string& title)

@@ -1,47 +1,61 @@
 ﻿#include <raylib.h>
+#include <raymath.h>
+
+#include <algorithm>
+#include <array>
+#include <vector>
+#include <deque>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <cmath>
+#include <concepts>
 #include <cstdint>
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <numbers>
+#include <random>
+#include <stdexcept>
+#include <string>
+#include <utility>
+
+#include "utility/BasicGameRunner.h"
+#include "utility/Math.h"
+#include "utility/Tool.h"
 
 // Template for the main function.
 int32_t main()
 {
-    // Window initialization.
-    constexpr int32_t windowWidth = 800;
-    constexpr int32_t windowHeight = 450;
-    constexpr const char* pWindowTitle = "Raylib - Nature of Code";
+    CBasicGameRunner game;
 
-    InitWindow(windowWidth, windowHeight, pWindowTitle);
-    SetTargetFPS(60);
+    const auto center = game.GetWindowCenterPosition();
 
-    auto canvas = LoadRenderTexture(windowWidth, windowHeight);
-
-    while (!WindowShouldClose())
+    // Update logic here
+    auto update = [&]
     {
-        // Update.
-        {
+    };
 
-        }
+    // Draw world here
+    auto drawWorld = [&]
+    {
+        const double time = GetTime();
+        const float deltaTime = GetFrameTime();
+    };
 
-        BeginTextureMode(canvas);
-        ClearBackground(RAYWHITE);
-        // Draw.
-        {
+    // Draw UI here
+    auto drawUi = [&]
+    {
+    };
 
-        }
-        EndTextureMode();
+    // Set callbacks.
+    game.SetUpdateCallback(update);
+    game.SetDrawWorldCallback(drawWorld);
+    game.SetDrawUiCallback(drawUi);
 
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        // Draw UI.
-        {
-
-        }
-        constexpr auto sourceRect = Rectangle{ 0.0f, 0.0f, windowWidth, -windowHeight };
-        constexpr auto destRect = Rectangle{ 0.0f, 0.0f, windowWidth, windowHeight };
-        DrawTexturePro(canvas.texture, sourceRect, destRect, { 0.0f, 0.0f }, 0.0f, WHITE);
-        DrawFPS(0, 0);
-        EndDrawing();
-    }
-    CloseWindow();
+    // Run the game.
+    game.RunGame();
 
     return 0;
 }

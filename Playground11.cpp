@@ -1,9 +1,28 @@
 #include <raylib.h>
 #include <raymath.h>
+
+#include <algorithm>
+#include <array>
+#include <vector>
+#include <deque>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <cmath>
+#include <concepts>
 #include <cstdint>
 #include <functional>
+#include <iostream>
+#include <memory>
+#include <numbers>
+#include <random>
+#include <stdexcept>
+#include <string>
+#include <utility>
 
 #include "utility/BasicGameRunner.h"
+#include "utility/Math.h"
 #include "utility/Tool.h"
 
 int32_t main()
@@ -12,22 +31,29 @@ int32_t main()
 
     const auto center = game.GetWindowCenterPosition();
 
-    game.SetUpdateCallback([]() {
-        // Update logic here
-    });
+    auto update = [&]
+    {
+    };
 
-    game.SetWorldDrawCallback([&]() {
-        const float time = static_cast<float>(GetTime());
+    // Draw world here
+    auto drawWorld = [&]
+    {
+        const double time = GetTime();
+        const float deltaTime = GetFrameTime();
 
-        // Draw world here
-        tool::DrawReferenceCoordinate(center, time);
-    });
+        tool::DrawReferenceCoordinate(game.GetWindowCenterPosition(), time);
+    };
 
-    game.SetUIDrawCallback([]() {
-        // Draw UI here
+    auto drawUi = [&]
+    {
+    };
 
-    });
+    // Set callbacks.
+    game.SetUpdateCallback(update);
+    game.SetDrawWorldCallback(drawWorld);
+    game.SetDrawUiCallback(drawUi);
 
+    // Run the game.
     game.RunGame();
 
     return 0;

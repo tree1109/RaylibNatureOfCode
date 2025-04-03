@@ -6,7 +6,6 @@
 #include <raylib.h>
 #include <cstdint>
 #include <functional>
-#include <stdexcept>
 #include <string>
 
 class CBasicGameRunner
@@ -27,8 +26,8 @@ public:
     void StopGame();
 
     void SetUpdateCallback(std::function<void()>&& updateCallback);
-    void SetWorldDrawCallback(std::function<void()>&& worldDrawCallback);
-    void SetUIDrawCallback(std::function<void()>&& uiDrawCallback);
+    void SetDrawWorldCallback(std::function<void()>&& drawWorldCallback);
+    void SetDrawUiCallback(std::function<void()>&& drawUiCallback);
 
     void SetGameTitle(const std::string& title);
     void SetGameFPS(const int32_t targetFPS);
@@ -56,8 +55,8 @@ private:
     bool m_isDrawFPS = true;
 
     std::function<void()> m_updateCallback;
-    std::function<void()> m_worldDrawCallback;
-    std::function<void()> m_uiDrawCallback;
+    std::function<void()> m_drawWorldCallback;
+    std::function<void()> m_drawUiCallback;
 };
 
 #endif // INCLUDE_BASIC_GAME_RUNNER_H
