@@ -156,54 +156,73 @@ void CBasicGameRunner::StopGame()
     m_isGameRunning = false;
 }
 
-void CBasicGameRunner::SetUpdateCallback(std::function<void()>&& updateCallback)
+CBasicGameRunner& CBasicGameRunner::SetUpdateCallback(std::function<void()>&& updateCallback)
 {
     m_updateCallback = std::move(updateCallback);
+    return *this;
 }
 
-void CBasicGameRunner::SetDrawWorldCallback(std::function<void()>&& drawWorldCallback)
+CBasicGameRunner& CBasicGameRunner::SetDrawWorldCallback(std::function<void()>&& drawWorldCallback)
 {
     m_drawWorldCallback = std::move(drawWorldCallback);
+    return *this;
 }
 
-void CBasicGameRunner::SetDrawUiCallback(std::function<void()>&& drawUiCallback)
+CBasicGameRunner& CBasicGameRunner::SetDrawUiCallback(std::function<void()>&& drawUiCallback)
 {
     m_drawUiCallback = std::move(drawUiCallback);
+    return *this;
 }
 
-void CBasicGameRunner::SetGameTitle(const std::string& title)
+CBasicGameRunner& CBasicGameRunner::SetGameTitle(const std::string& title)
 {
     m_windowTitle = title;
+    return *this;
 }
 
-void CBasicGameRunner::SetGameFPS(const int32_t targetFPS)
+CBasicGameRunner& CBasicGameRunner::SetGameFPS(const int32_t targetFPS)
 {
     constexpr int32_t minFPS = 1;
     constexpr int32_t maxFPS = 6000;
     m_windowTargetFPS = std::clamp(targetFPS, minFPS, maxFPS);
+    return *this;
 }
 
-void CBasicGameRunner::SetDrawCameraInfo(const bool isDrawCameraInfo)
+CBasicGameRunner& CBasicGameRunner::SetDrawCameraInfo(const bool isDrawCameraInfo)
 {
     m_isDrawCameraInfo = isDrawCameraInfo;
+    return *this;
 }
 
-void CBasicGameRunner::SetDrawFPS(const bool isDrawFPS)
+CBasicGameRunner& CBasicGameRunner::SetDrawFPS(const bool isDrawFPS)
 {
     m_isDrawFPS = isDrawFPS;
+    return *this;
 }
 
-void CBasicGameRunner::AddKeyboardControlsInfo(std::string&& info)
+CBasicGameRunner& CBasicGameRunner::AddKeyboardControlsInfo(std::string&& info)
 {
     m_keyboardControlsInfo.emplace_back(std::move(info));
+    return *this;
 }
 
-void CBasicGameRunner::ResetCamera()
+CBasicGameRunner& CBasicGameRunner::ResetCamera()
 {
     m_camera.offset = Vector2Zeros;
     m_camera.target = Vector2Zeros;
     m_camera.rotation = 0.0f;
     m_camera.zoom = 1.0f;
+    return *this;
+}
+
+int32_t CBasicGameRunner::GetWindowWidth() const
+{
+    return m_windowWidth;
+}
+
+int32_t CBasicGameRunner::GetWindowHeight() const
+{
+    return m_windowHeight;
 }
 
 Vector2 CBasicGameRunner::GetWindowCenterPosition() const

@@ -49,13 +49,11 @@ int32_t main()
     {
     };
 
-    // Set callbacks.
-    game.SetUpdateCallback(update);
-    game.SetDrawWorldCallback(drawWorld);
-    game.SetDrawUiCallback(drawUi);
-
-    // Run the game.
-    game.RunGame();
+    // Set callbacks and run the game.
+    game.SetUpdateCallback(update)
+        .SetDrawWorldCallback(drawWorld)
+        .SetDrawUiCallback(drawUi)
+        .RunGame();
 
     return 0;
 }

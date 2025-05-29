@@ -8,6 +8,7 @@
 #include <functional>
 #include <vector>
 
+#include "utility/BasicGameRunner.h"
 #include "utility/Math.h"
 #include "utility/Tool.h"
 
@@ -146,75 +147,58 @@ namespace
 
 int32_t main()
 {
-    // Window initialization.
-    constexpr int32_t windowWidth = 800;
-    constexpr int32_t windowHeight = 600;
-    constexpr const char* pWindowTitle = "Raylib - Nature of Code";
+    CBasicGameRunner game;
 
-    InitWindow(windowWidth, windowHeight, pWindowTitle);
-    SetTargetFPS(60);
-
-    auto canvas = LoadRenderTexture(windowWidth, windowHeight);
-
-    constexpr Vector2 center = { windowWidth * 0.5f , windowHeight * 0.5f };
+    const auto center = game.GetWindowCenterPosition();
 
     Pendulum pendulum = { center, 200.0f };
 
     DoublePendulum doublePendulum = { center, 100.0f, { -PI * 0.25f, -PI * 0.125f } };
     std::deque<Vector2> trace;
 
-    while (!WindowShouldClose())
+    auto update = [&]
     {
-        const float time = static_cast<float>(GetTime());
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+        {
+            const float angle = Vector2Angle(Vector2UnitX, GetMousePosition() - pendulum.PivotPos);
+            pendulum.Angle = angle;
+            pendulum.AngularVelocity = 0.0f;
+        }
+        pendulum.AngularVelocity *= 0.99f;
+        pendulum.ApplyForce(Vector2{ 0.0f, 10.0f });
+        pendulum.Update();
+
+        doublePendulum.Update();
+        trace.emplace_back(doublePendulum.GetBob2Pos());
+        while (trace.size() > 10000)
+        {
+            trace.pop_front();
+        }
+    };
+
+    auto drawWorld = [&]
+    {
+        const double time = GetTime();
         const float deltaTime = GetFrameTime();
 
-        // Update.
+        pendulum.Draw();
+
+        doublePendulum.Draw();
+        for (int32_t i = 0; i < trace.size() - 1; ++i)
         {
-            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
-            {
-                const float angle = Vector2Angle(Vector2UnitX, GetMousePosition() - pendulum.PivotPos);
-                pendulum.Angle = angle;
-                pendulum.AngularVelocity = 0.0f;
-            }
-            pendulum.AngularVelocity *= 0.99f;
-            pendulum.ApplyForce(Vector2{ 0.0f, 10.0f });
-            pendulum.Update();
-
-            doublePendulum.Update();
-            trace.emplace_back(doublePendulum.GetBob2Pos());
-            while (trace.size() > 10000)
-            {
-                trace.pop_front();
-            }
+            DrawLineV(trace[i], trace[i + 1], PINK);
         }
+    };
 
-        BeginTextureMode(canvas);
-        ClearBackground(RAYWHITE);
-        // Draw.
-        {
-            pendulum.Draw();
+    auto drawUi = [&]
+    {
+    };
 
-            doublePendulum.Draw();
-            for (int32_t i = 0; i < trace.size() - 1; ++i)
-            {
-                DrawLineV(trace[i], trace[i + 1], PINK);
-            }
-        }
-        EndTextureMode();
-
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        // Draw UI.
-        {
-
-        }
-        constexpr auto sourceRect = Rectangle{ 0.0f, 0.0f, windowWidth, -windowHeight };
-        constexpr auto destRect = Rectangle{ 0.0f, 0.0f, windowWidth, windowHeight };
-        DrawTexturePro(canvas.texture, sourceRect, destRect, { 0.0f, 0.0f }, 0.0f, WHITE);
-        DrawFPS(0, 0);
-        EndDrawing();
-    }
-    CloseWindow();
+    // Set callbacks and run the game.
+    game.SetUpdateCallback(update)
+        .SetDrawWorldCallback(drawWorld)
+        .SetDrawUiCallback(drawUi)
+        .RunGame();
 
     return 0;
 }

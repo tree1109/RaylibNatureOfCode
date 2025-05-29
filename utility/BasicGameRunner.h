@@ -25,19 +25,21 @@ public:
 	void RunGame();
     void StopGame();
 
-    void SetUpdateCallback(std::function<void()>&& updateCallback);
-    void SetDrawWorldCallback(std::function<void()>&& drawWorldCallback);
-    void SetDrawUiCallback(std::function<void()>&& drawUiCallback);
+    CBasicGameRunner& SetUpdateCallback(std::function<void()>&& updateCallback);
+    CBasicGameRunner& SetDrawWorldCallback(std::function<void()>&& drawWorldCallback);
+    CBasicGameRunner& SetDrawUiCallback(std::function<void()>&& drawUiCallback);
 
-    void SetGameTitle(const std::string& title);
-    void SetGameFPS(const int32_t targetFPS);
-    void SetDrawCameraInfo(const bool isDrawCameraInfo);
-    void SetDrawFPS(const bool isDrawFPS);
+    CBasicGameRunner& SetGameTitle(const std::string& title);
+    CBasicGameRunner& SetGameFPS(const int32_t targetFPS);
+    CBasicGameRunner& SetDrawCameraInfo(const bool isDrawCameraInfo);
+    CBasicGameRunner& SetDrawFPS(const bool isDrawFPS);
 
-    void AddKeyboardControlsInfo(std::string&& info);
+    CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info);
 
-    void ResetCamera();
+    CBasicGameRunner& ResetCamera();
 
+    [[nodiscard]] int32_t GetWindowWidth() const;
+    [[nodiscard]] int32_t GetWindowHeight() const;
     [[nodiscard]] Vector2 GetWindowCenterPosition() const;
 
 private:
