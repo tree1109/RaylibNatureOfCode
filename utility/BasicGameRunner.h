@@ -33,6 +33,7 @@ public:
     CBasicGameRunner& SetGameFPS(const int32_t targetFPS);
     CBasicGameRunner& SetDrawCameraInfo(const bool isDrawCameraInfo);
     CBasicGameRunner& SetDrawFPS(const bool isDrawFPS);
+    CBasicGameRunner& SetBackgroundColor(const Color& color);
 
     CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info);
 
@@ -47,6 +48,8 @@ private:
     const int32_t m_windowWidth = 800;
     const int32_t m_windowHeight = 600;
     int32_t m_windowTargetFPS = 60;
+
+    Color m_backgroundColor = RAYWHITE;
 
     std::vector<std::string> m_keyboardControlsInfo;
 

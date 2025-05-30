@@ -96,7 +96,7 @@ void CBasicGameRunner::RunGame()
 
         // Draw to canvas.
         BeginTextureMode(canvas);
-        ClearBackground(RAYWHITE);
+        ClearBackground(m_backgroundColor);
         BeginMode2D(m_camera);
         // Draw world.
         if (m_drawWorldCallback)
@@ -197,6 +197,12 @@ CBasicGameRunner& CBasicGameRunner::SetDrawCameraInfo(const bool isDrawCameraInf
 CBasicGameRunner& CBasicGameRunner::SetDrawFPS(const bool isDrawFPS)
 {
     m_isDrawFPS = isDrawFPS;
+    return *this;
+}
+
+CBasicGameRunner & CBasicGameRunner::SetBackgroundColor(const Color &color)
+{
+    m_backgroundColor = color;
     return *this;
 }
 

@@ -54,8 +54,16 @@ file(GLOB UTILITY_SRC_H "${PROJECT_SOURCE_DIR}/utility/*.h")
 file(GLOB UTILITY_SRC_CPP "${PROJECT_SOURCE_DIR}/utility/*.cpp")
 set(UTILITY_SRC ${UTILITY_SRC_H} ${UTILITY_SRC_CPP})
 
+# Game objects source files.
+file(GLOB GAME_OBJECT_SRC_H "${PROJECT_SOURCE_DIR}/game_object/*.h")
+file(GLOB GAME_OBJECT_SRC_CPP "${PROJECT_SOURCE_DIR}/game_object/*.cpp")
+set(GAME_OBJECT_SRC ${GAME_OBJECT_SRC_H} ${GAME_OBJECT_SRC_CPP})
+
+# All source files.
+set(SOURCE_FILES ${UTILITY_SRC} ${GAME_OBJECT_SRC})
+
 # Main executable.
-MyAddExecutable(${PROJECT_NAME} ${UTILITY_SRC})
+MyAddExecutable(${PROJECT_NAME} ${SOURCE_FILES})
 RaylibOtherPlatform(${PROJECT_NAME})
 message(STATUS "Add executable: ${PROJECT_NAME}")
 
@@ -63,7 +71,7 @@ message(STATUS "Add executable: ${PROJECT_NAME}")
 set(PLAYGROUND_LIST 1 2 3 4 5 6 7 8 9 10 11)
 foreach(NUM ${PLAYGROUND_LIST})
     set(EXECUTABLE_NAME "Playground${NUM}")
-    MyAddExecutable(${EXECUTABLE_NAME} ${UTILITY_SRC})
+    MyAddExecutable(${EXECUTABLE_NAME} ${SOURCE_FILES})
     RaylibOtherPlatform(${EXECUTABLE_NAME})
     message(STATUS "Add executable: ${EXECUTABLE_NAME}")
 endforeach()

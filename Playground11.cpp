@@ -25,23 +25,47 @@
 #include "utility/Math.h"
 #include "utility/Tool.h"
 
+#include "game_object/Particle.h"
+
 int32_t main()
 {
     CBasicGameRunner game;
+    game.SetBackgroundColor(GRAY);
 
     const auto center = game.GetWindowCenterPosition();
 
-    auto update = [&]
-    {
+    std::vector<CParticle> particles;
+
+    auto update = [&]() {
+        particles.erase(std::ranges::remove_if(particles, [](const CParticle& particle) {
+            return particle.IsDead();
+        }).begin(), particles.end());
+
+        particles.emplace_back(center);
+
+        for(auto& particle : particles) {
+            constexpr Vector2 gravity { 0.0f, 9.81f };
+
+            const Vector2 randomForce = Vector2{
+                math::GetRandomGaussian(0.0f, 10.0f),
+                math::GetRandomGaussian(0.0f, 10.0f)
+            };
+
+            particle.ApplyForce(gravity);
+            particle.ApplyForce(randomForce);
+            particle.Update();
+        }
     };
 
     // Draw world here
-    auto drawWorld = [&]
-    {
+    auto drawWorld = [&]() {
         const double time = GetTime();
         const float deltaTime = GetFrameTime();
 
-        tool::DrawReferenceCoordinate(game.GetWindowCenterPosition(), time);
+        for (const auto& particle : particles)
+        {
+            particle.Draw();
+        }
     };
 
     auto drawUi = [&]
