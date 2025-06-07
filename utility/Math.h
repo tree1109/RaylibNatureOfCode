@@ -16,7 +16,7 @@ namespace math {
     float MapValue(float value, float currentMin, float currentMax, float newMin, float newMax);
     float PeringNoise(float x);
 
-    Vector2 GetRandomVector2();
+    Vector2 GetRandomDirection();
     float GetAngle(const Vector2& direction);
 
     Vector2 GetSpringForce(const Vector2& bobPos, const Vector2& anchorPos, const float restLength, const float k);

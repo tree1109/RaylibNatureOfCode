@@ -38,7 +38,7 @@ namespace
 
             // Random.
             if (false) {
-                m_acceleration = math::GetRandomVector2() * GetRandomValue(0, 1000);
+                m_acceleration = math::GetRandomDirection() * GetRandomValue(0, 1000);
             }
 
             // Towards the mouse.

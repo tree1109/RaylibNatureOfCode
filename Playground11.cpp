@@ -31,7 +31,9 @@
 int32_t main()
 {
     CBasicGameRunner game;
-    game.SetBackgroundColor(GRAY);
+    game.SetBackgroundColor(GRAY)
+        .AddKeyboardControlsInfo("E - Clear Emitters")
+        .AddKeyboardControlsInfo("Left Click - Create Emitter");
 
     const auto center = game.GetWindowCenterPosition();
 
@@ -68,15 +70,20 @@ int32_t main()
 
         // Emitter.
         {
+            // Remove all emitters.
             if (IsKeyPressed(KEY_E)) {
                 emitters.clear();
                 emitters.shrink_to_fit();
             }
 
+            // Create new emitter.
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 const auto mousePosition = GetMousePosition();
                 emitters.emplace_back(mousePosition);
-                emitters.back().SetForce(math::Gravity).SetParticleLifeTime(3.0f);
+                emitters.back()
+                    .SetParticleForce(math::Gravity)
+                    .SetParticleLifeTime(5.0f)
+                    .SetParticleInitialForce(math::GetRandomDirection() * 1000.0f);
             }
 
             for (auto& emitter : emitters) {
@@ -108,10 +115,10 @@ int32_t main()
 
         // Particle count.
         const auto text = std::format("Particle Count: {}", totalParticleCount);
-        DrawText(text.c_str(), 10, 100, 20, BLACK);
+        DrawText(text.c_str(), 10, 200, 20, BLACK);
         // Vector capacity.
         const auto capacityText = std::format("Particle Capacity: {}", totalCapacity);
-        DrawText(capacityText.c_str(), 10, 120, 20, BLACK);
+        DrawText(capacityText.c_str(), 10, 220, 20, BLACK);
     };
 
     // Set callbacks and run the game.

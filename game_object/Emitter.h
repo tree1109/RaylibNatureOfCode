@@ -22,14 +22,15 @@ public:
     void Draw() const;
 
     CEmitter& SetPosition(const Vector2& position);
-    CEmitter& SetParticleInitialVelocity(const Vector2& velocity);
-    CEmitter& SetForce(const Vector2& force);
+    CEmitter& SetParticleInitialForce(const Vector2& force);
+    CEmitter& SetParticleForce(const Vector2& force);
     CEmitter& SetParticleLifeTime(const float lifeTime);
     CEmitter& SetParticleSpawnCountPerFrame(const int32_t count);
+    CEmitter& SetMaxParticleCount(const int32_t maxCount);
     CEmitter& SetEmitting(const bool isEmitting);
 
-    size_t GetParticleCount() const;
-    size_t GetCapacity() const;
+    int32_t GetParticleCount() const;
+    int32_t GetCapacity() const;
 
 private:
     Vector2 m_position{ Vector2Zero() };
@@ -37,7 +38,8 @@ private:
     Vector2 m_force{ Vector2Zero() };
     float m_particleLifeTime{ 10.0f };
     int32_t m_particleSpawnCountPerFrame{ 10 };
-    bool m_bEmitting{ false };
+    int32_t m_maxParticleCount = 16384;
+    bool m_bEmitting{ true };
     std::vector<CParticle> m_particles;
 };
 

@@ -62,7 +62,7 @@ float math::PeringNoise(float x)
     return MapValue(noise, -1.0f, 1.0f, 0.0f, 1.0f);
 }
 
-Vector2 math::GetRandomVector2()
+Vector2 math::GetRandomDirection()
 {
     static std::random_device rd;
     static std::mt19937 gen(rd());

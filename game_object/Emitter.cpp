@@ -15,11 +15,18 @@ void CEmitter::Update()
     }).begin(), m_particles.end());
 
     // Spawn new particles.
-    for (int32_t i = 0; i < m_particleSpawnCountPerFrame; i++) {
-        m_particles.emplace_back(m_position);
-        m_particles.back()
-            .SetLifeTime(m_particleLifeTime)
-            .ApplyForce(m_initialForce);
+    if (m_bEmitting) {
+        for (int32_t i = 0; i < m_particleSpawnCountPerFrame; i++) {
+            // Break if the maximum particle count is reached.
+            if (m_particles.size() >= m_maxParticleCount) {
+                break;
+            }
+
+            m_particles.emplace_back(m_position);
+            m_particles.back()
+                .SetLifeTime(m_particleLifeTime)
+                .ApplyForce(m_initialForce);
+        }
     }
 
     // Update existing particles.
@@ -51,13 +58,13 @@ CEmitter &CEmitter::SetPosition(const Vector2 &position)
     return *this;
 }
 
-CEmitter &CEmitter::SetParticleInitialVelocity(const Vector2 &velocity)
+CEmitter &CEmitter::SetParticleInitialForce(const Vector2 &force)
 {
-    m_initialForce = velocity;
+    m_initialForce = force;
     return *this;
 }
 
-CEmitter & CEmitter::SetForce(const Vector2 &force)
+CEmitter & CEmitter::SetParticleForce(const Vector2 &force)
 {
     m_force = force;
     return *this;
@@ -77,18 +84,25 @@ CEmitter &CEmitter::SetParticleSpawnCountPerFrame(const int32_t count)
     return *this;
 }
 
+CEmitter &CEmitter::SetMaxParticleCount(const int32_t maxCount)
+{
+    constexpr int32_t MaxParticleCount = 1024 * 64;
+    m_maxParticleCount = std::clamp(maxCount, 1, MaxParticleCount);
+    return *this;
+}
+
 CEmitter &CEmitter::SetEmitting(const bool isEmitting)
 {
     m_bEmitting = isEmitting;
     return *this;
 }
 
-size_t CEmitter::GetParticleCount() const
+int32_t CEmitter::GetParticleCount() const
 {
     return m_particles.size();
 }
 
-size_t CEmitter::GetCapacity() const
+int32_t CEmitter::GetCapacity() const
 {
     return m_particles.capacity();
 }
