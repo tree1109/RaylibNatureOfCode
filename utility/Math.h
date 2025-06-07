@@ -7,6 +7,8 @@
 #include <random>
 
 namespace math {
+    constexpr Vector2 Gravity{ 0.0f, 9.81f };
+
     float GetRandomGaussian(float mean, float stdDev);
     float GetRandomValue(float min, float max);
     float GetRandomValue();

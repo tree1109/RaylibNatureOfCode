@@ -49,6 +49,9 @@ function(MyAddExecutable EXECUTABLE_NAME)
     target_link_libraries(${EXECUTABLE_NAME} raylib)
 endfunction()
 
+# Set include paths.
+include_directories(${PROJECT_SOURCE_DIR})
+
 # Utility source files.
 file(GLOB UTILITY_SRC_H "${PROJECT_SOURCE_DIR}/utility/*.h")
 file(GLOB UTILITY_SRC_CPP "${PROJECT_SOURCE_DIR}/utility/*.cpp")

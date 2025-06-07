@@ -21,6 +21,7 @@
 #include <string>
 #include <utility>
 
+#include "game_object/Emitter.h"
 #include "utility/BasicGameRunner.h"
 #include "utility/Math.h"
 #include "utility/Tool.h"
@@ -35,51 +36,81 @@ int32_t main()
     const auto center = game.GetWindowCenterPosition();
 
     std::vector<CParticle> particles;
+    std::vector<CEmitter> emitters;
 
     auto update = [&]() {
-        particles.erase(std::ranges::remove_if(particles, [](const CParticle& particle) {
-            return particle.IsDead();
-        }).begin(), particles.end());
+        // Particles.
+        {
+            particles.erase(std::ranges::remove_if(particles, [](const CParticle &particle) {
+                return particle.IsDead();
+            }).begin(), particles.end());
 
-        constexpr int32_t kParticleCountSpawnPerFrame = 10;
-        for (int32_t i = 0; i < kParticleCountSpawnPerFrame; i++) {
+            constexpr int32_t kParticleCountSpawnPerFrame = 10;
+            for (int32_t i = 0; i < kParticleCountSpawnPerFrame; i++) {
+                particles.emplace_back(center);
+            }
+
             particles.emplace_back(center);
-        }
 
-        particles.emplace_back(center);
+            for (auto &particle: particles) {
+                constexpr Vector2 gravity{0.0f, 9.81f};
 
-        for(auto& particle : particles) {
-            constexpr Vector2 gravity { 0.0f, 9.81f };
-
-            const Vector2 randomForce = Vector2{
-                math::GetRandomGaussian(0.0f, 10.0f),
-                math::GetRandomGaussian(0.0f, 10.0f)
+                const Vector2 randomForce = Vector2{
+                    math::GetRandomGaussian(0.0f, 10.0f),
+                    math::GetRandomGaussian(0.0f, 10.0f)
             };
 
-            particle.ApplyForce(gravity);
-            particle.ApplyForce(randomForce);
-            particle.Update();
+                particle.ApplyForce(gravity);
+                particle.ApplyForce(randomForce);
+                particle.Update();
+            }
+        }
+
+        // Emitter.
+        {
+            if (IsKeyPressed(KEY_E)) {
+                emitters.clear();
+                emitters.shrink_to_fit();
+            }
+
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                const auto mousePosition = GetMousePosition();
+                emitters.emplace_back(mousePosition);
+                emitters.back().SetForce(math::Gravity).SetParticleLifeTime(3.0f);
+            }
+
+            for (auto& emitter : emitters) {
+                emitter.Update();
+            }
         }
     };
 
     // Draw world here
     auto drawWorld = [&]() {
-        const double time = GetTime();
-        const float deltaTime = GetFrameTime();
-
-        for (const auto& particle : particles)
-        {
+        // Particles.
+        for (const auto& particle : particles) {
             particle.Draw();
+        }
+
+        // Emitter.
+        for (const auto& emitter : emitters) {
+            emitter.Draw();
         }
     };
 
     auto drawUi = [&]
     {
+        const size_t totalParticleCount = particles.size() + std::accumulate(emitters.begin(), emitters.end(), 0,
+            [](size_t sum, const CEmitter& emitter) { return sum + emitter.GetParticleCount(); });
+
+        const size_t totalCapacity = particles.capacity() + std::accumulate(emitters.begin(), emitters.end(), 0,
+            [](size_t sum, const CEmitter& emitter) { return sum + emitter.GetCapacity(); });
+
         // Particle count.
-        const auto text = std::format("Particle Count: {}", particles.size());
+        const auto text = std::format("Particle Count: {}", totalParticleCount);
         DrawText(text.c_str(), 10, 100, 20, BLACK);
         // Vector capacity.
-        const auto capacityText = std::format("Particle Capacity: {}", particles.capacity());
+        const auto capacityText = std::format("Particle Capacity: {}", totalCapacity);
         DrawText(capacityText.c_str(), 10, 120, 20, BLACK);
     };
 
