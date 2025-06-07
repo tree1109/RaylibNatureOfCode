@@ -41,6 +41,11 @@ int32_t main()
             return particle.IsDead();
         }).begin(), particles.end());
 
+        constexpr int32_t kParticleCountSpawnPerFrame = 10;
+        for (int32_t i = 0; i < kParticleCountSpawnPerFrame; i++) {
+            particles.emplace_back(center);
+        }
+
         particles.emplace_back(center);
 
         for(auto& particle : particles) {
@@ -70,6 +75,12 @@ int32_t main()
 
     auto drawUi = [&]
     {
+        // Particle count.
+        const auto text = std::format("Particle Count: {}", particles.size());
+        DrawText(text.c_str(), 10, 100, 20, BLACK);
+        // Vector capacity.
+        const auto capacityText = std::format("Particle Capacity: {}", particles.capacity());
+        DrawText(capacityText.c_str(), 10, 120, 20, BLACK);
     };
 
     // Set callbacks and run the game.
