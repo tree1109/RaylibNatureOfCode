@@ -1,5 +1,6 @@
 #include "Emitter.h"
 
+#include "IForceField.h"
 #include "utility/Math.h"
 
 CEmitter::CEmitter(const Vector2& position) :
@@ -51,6 +52,15 @@ void CEmitter::Draw() const
 CEmitter& CEmitter::ApplyForce(const Vector2& force)
 {
     m_force += force;
+    return *this;
+}
+
+CEmitter& CEmitter::ApplyForceField(const IForceField& forceField)
+{
+    for (auto& particle : m_particles) {
+        const Vector2 force = forceField.GetForce(particle);
+        particle.ApplyForce(force);
+    }
     return *this;
 }
 

@@ -19,6 +19,10 @@ public:
     CParticle& SetMass(const float mass);
     CParticle& SetLifeTime(const float& lifeTime);
 
+    [[nodiscard]] Vector2 GetPosition() const;
+    [[nodiscard]] Vector2 GetVelocity() const;
+    [[nodiscard]] Vector2 GetAcceleration() const;
+    [[nodiscard]] float GetMass() const;
     [[nodiscard]] bool IsDead() const;
 
 private:

@@ -50,6 +50,26 @@ CParticle& CParticle::SetLifeTime(const float& lifeTime)
     return *this;
 }
 
+Vector2 CParticle::GetPosition() const
+{
+    return m_position;
+}
+
+Vector2 CParticle::GetVelocity() const
+{
+    return m_velocity;
+}
+
+Vector2 CParticle::GetAcceleration() const
+{
+    return m_acceleration;
+}
+
+float CParticle::GetMass() const
+{
+    return m_mass;
+}
+
 bool CParticle::IsDead() const
 {
     return m_lifeTimeRemaining < 0;

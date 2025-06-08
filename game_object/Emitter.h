@@ -7,6 +7,8 @@
 
 #include "Particle.h"
 
+class IForceField;
+
 class CEmitter {
 public:
     CEmitter() = default;
@@ -22,6 +24,7 @@ public:
     void Draw() const;
 
     CEmitter& ApplyForce(const Vector2& force);
+    CEmitter& ApplyForceField(const IForceField& forceField);
     CEmitter& SetPosition(const Vector2& position);
     CEmitter& SetParticleInitialForce(const Vector2& force);
     CEmitter& SetParticleLifeTime(const float lifeTime);
