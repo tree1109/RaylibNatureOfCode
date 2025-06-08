@@ -9,7 +9,7 @@
 class CParticle
 {
 public:
-    CParticle(const Vector2& position);
+    explicit CParticle(const Vector2& position);
 
     void Update();
     void Draw() const;

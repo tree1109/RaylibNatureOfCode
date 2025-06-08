@@ -1,5 +1,7 @@
 #include "Tool.h"
 
+#include <stdexcept>
+
 #include "raymath.h"
 
 void tool::DrawReferenceCoordinate(const Vector2& origin, const float time)
@@ -43,4 +45,30 @@ void tool::DrawReferenceCoordinate(const Vector2& origin, const float time)
     DrawText(TextFormat("X: %d", infoX), infoX, infoY, fontSize, RED);
     DrawText(TextFormat("Y: %d", infoY), infoX, (infoY + fontSize), fontSize, LIME);
     DrawText(TextFormat("Deg: %d", degrees), infoX, (infoY + fontSize * 2), fontSize, BLUE);
+}
+
+Image tool::GenerateBlurCircleImage(const Color& color)
+{
+    constexpr int32_t size = 64;
+    Image image = GenImageColor(size, size, BLANK);
+
+    constexpr int32_t cx = size / 2;
+    constexpr int32_t cy = size / 2;
+    constexpr float radius = size / 2.0f;
+
+    for (int32_t y = 0; y < size; y++) {
+        for (int32_t x = 0; x < size; x++) {
+            const float dx = static_cast<float>(x) - cx;
+            const float dy = static_cast<float>(y) - cy;
+            const float dist = sqrtf(dx * dx + dy * dy);
+            const float t = 1.0f - (dist / radius);
+            if (t > 0) {
+                const auto alpha = static_cast<uint8_t>(powf(t, 2.5f) * 255.0f);
+                const Color col = {255, 255, 255, alpha};
+                ImageDrawPixel(&image, x, y, col);
+            }
+        }
+    }
+
+    return image;
 }

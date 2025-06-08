@@ -4,9 +4,12 @@
 #define INCLUDE_TOOL_H
 
 #include <raylib.h>
+#include <cstdint>
 
 namespace tool {
     void DrawReferenceCoordinate(const Vector2& origin, const float time);
+
+    Image GenerateBlurCircleImage(const Color& color);
 }
 
 #endif // !INCLUDE_TOOL_H
