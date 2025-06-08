@@ -27,14 +27,14 @@ void CEmitter::Update()
 
     // Update existing particles.
     for (auto& particle : m_particles) {
-        const auto randomForce = Vector2{
-            math::GetRandomGaussian(0.0f, 10.0f),
-            math::GetRandomGaussian(0.0f, 10.0f)
-        };
+        const auto randomForce = math::GetRandomGaussianVector2(10.0f);
+        const Vector2 netForce = m_force + randomForce;
 
-        particle.ApplyForce(m_force + randomForce);
+        particle.ApplyForce(netForce);
         particle.Update();
     }
+
+    m_force = Vector2Zero();
 }
 
 void CEmitter::Draw() const
@@ -43,7 +43,15 @@ void CEmitter::Draw() const
     DrawCircleLinesV(m_position, 5.0f, RED);
 
     // Particle drawing.
-    for (const auto& particle : m_particles) { particle.Draw(); }
+    for (const auto& particle : m_particles) {
+        particle.Draw();
+    }
+}
+
+CEmitter& CEmitter::ApplyForce(const Vector2& force)
+{
+    m_force += force;
+    return *this;
 }
 
 CEmitter& CEmitter::SetPosition(const Vector2& position)
@@ -58,12 +66,6 @@ CEmitter& CEmitter::SetParticleInitialForce(const Vector2& force)
     return *this;
 }
 
-CEmitter& CEmitter::SetParticleForce(const Vector2& force)
-{
-    m_force = force;
-    return *this;
-}
-
 CEmitter& CEmitter::SetParticleLifeTime(const float lifeTime)
 {
     constexpr float MinParticleLifeTime = 0.1f;
@@ -73,15 +75,13 @@ CEmitter& CEmitter::SetParticleLifeTime(const float lifeTime)
 
 CEmitter& CEmitter::SetParticleSpawnCountPerFrame(const int32_t count)
 {
-    constexpr int32_t MaxParticleSpawnCount = 100;
-    m_particleSpawnCountPerFrame = std::clamp(count, 1, MaxParticleSpawnCount);
+    m_particleSpawnCountPerFrame = std::max(count, 1);
     return *this;
 }
 
 CEmitter& CEmitter::SetMaxParticleCount(const int32_t maxCount)
 {
-    constexpr int32_t MaxParticleCount = 1024 * 64;
-    m_maxParticleCount = std::clamp(maxCount, 1, MaxParticleCount);
+    m_maxParticleCount = std::max(maxCount, 1);
     return *this;
 }
 
@@ -91,12 +91,12 @@ CEmitter& CEmitter::SetEmitting(const bool isEmitting)
     return *this;
 }
 
-int32_t CEmitter::GetParticleCount() const
+size_t CEmitter::GetParticleCount() const
 {
-    return static_cast<int32_t>(m_particles.size());
+    return m_particles.size();
 }
 
-int32_t CEmitter::GetCapacity() const
+size_t CEmitter::GetCapacity() const
 {
-    return static_cast<int32_t>(m_particles.capacity());
+    return m_particles.capacity();
 }

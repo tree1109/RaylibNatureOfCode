@@ -45,7 +45,7 @@ int32_t main()
     auto update = [&]() {
         // Particles.
         {
-            particles.erase(std::ranges::remove_if(particles, [](const CParticle &particle) {
+            particles.erase(std::ranges::remove_if(particles, [](const CParticle& particle) {
                 return particle.IsDead();
             }).begin(), particles.end());
 
@@ -56,15 +56,10 @@ int32_t main()
 
             particles.emplace_back(center);
 
-            for (auto &particle: particles) {
-                constexpr Vector2 gravity{0.0f, 9.81f};
+            for (auto& particle : particles) {
+                const Vector2 randomForce = math::GetRandomGaussianVector2(10.0f);
 
-                const Vector2 randomForce = Vector2{
-                    math::GetRandomGaussian(0.0f, 10.0f),
-                    math::GetRandomGaussian(0.0f, 10.0f)
-            };
-
-                particle.ApplyForce(gravity);
+                particle.ApplyForce(math::Gravity);
                 particle.ApplyForce(randomForce);
                 particle.Update();
             }
@@ -83,13 +78,10 @@ int32_t main()
                 //const auto mousePosition = GetMousePosition();
                 const auto mousePosition = game.GetMouseWorldPosition();
                 emitters.emplace_back(mousePosition);
-                emitters.back()
-                    .SetParticleForce(math::Gravity)
-                    .SetParticleLifeTime(5.0f)
-                    .SetParticleInitialForce(math::GetRandomDirection() * 1000.0f);
             }
 
             for (auto& emitter : emitters) {
+                emitter.ApplyForce(math::Gravity);
                 emitter.Update();
             }
         }
@@ -108,13 +100,14 @@ int32_t main()
         }
     };
 
-    auto drawUi = [&]
-    {
-        const size_t totalParticleCount = particles.size() + std::accumulate(emitters.begin(), emitters.end(), 0,
-            [](size_t sum, const CEmitter& emitter) { return sum + emitter.GetParticleCount(); });
+    auto drawUi = [&] {
+        const size_t totalParticleCount = particles.size() +
+            std::accumulate(emitters.begin(), emitters.end(), size_t(),
+                            [](size_t sum, const CEmitter& emitter) { return sum + emitter.GetParticleCount(); });
 
-        const size_t totalCapacity = particles.capacity() + std::accumulate(emitters.begin(), emitters.end(), 0,
-            [](size_t sum, const CEmitter& emitter) { return sum + emitter.GetCapacity(); });
+        const size_t totalCapacity = particles.capacity() +
+            std::accumulate(emitters.begin(), emitters.end(), size_t(),
+                            [](size_t sum, const CEmitter& emitter) { return sum + emitter.GetCapacity(); });
 
         // Particle count.
         const auto text = std::format("Particle Count: {}", totalParticleCount);

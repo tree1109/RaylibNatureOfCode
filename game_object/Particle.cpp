@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-CParticle::CParticle(const Vector2 &position)
-    : m_position(position)
+CParticle::CParticle(const Vector2& position) :
+    m_position(position)
 {
 }
 
@@ -23,13 +23,13 @@ void CParticle::Draw() const
     DrawPixelV(m_position, color);
 }
 
-CParticle &CParticle::ApplyForce(const Vector2 &force)
+CParticle& CParticle::ApplyForce(const Vector2& force)
 {
     m_acceleration += force;
     return *this;
 }
 
-CParticle & CParticle::SetLifeTime(const float &lifeTime)
+CParticle& CParticle::SetLifeTime(const float& lifeTime)
 {
     m_lifeTime = lifeTime;
     m_lifeTimeRemaining = lifeTime;

@@ -68,7 +68,24 @@ Vector2 math::GetRandomDirection()
     static std::mt19937 gen(rd());
     std::uniform_real_distribution<float> dist(0.0f, std::numbers::pi_v<float> * 2.0f);
     float rad = dist(gen);
-    return Vector2(std::cosf(rad), std::sinf(rad));
+    return {std::cosf(rad), std::sinf(rad)};
+}
+
+Vector2 math::GetRandomVector2(const float scale)
+{
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dist(0.0f, scale);
+    return {dist(gen), dist(gen)};
+}
+
+Vector2 math::GetRandomGaussianVector2(const float stdDev)
+{
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::normal_distribution<float> dist(0.0f, stdDev);
+
+    return {dist(gen), dist(gen)};
 }
 
 Vector2 math::GetSpringForce(const Vector2& bobPos, const Vector2& anchorPos, const float restLength, const float k)

@@ -17,6 +17,8 @@ namespace math {
     float PeringNoise(float x);
 
     Vector2 GetRandomDirection();
+    Vector2 GetRandomVector2(const float scale = 1.0f);
+    Vector2 GetRandomGaussianVector2(const float stdDev);
     float GetAngle(const Vector2& direction);
 
     Vector2 GetSpringForce(const Vector2& bobPos, const Vector2& anchorPos, const float restLength, const float k);
