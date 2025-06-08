@@ -12,10 +12,12 @@
 #include <cmath>
 #include <concepts>
 #include <cstdint>
+#include <format>
 #include <functional>
 #include <iostream>
 #include <memory>
 #include <numbers>
+#include <numeric>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -78,7 +80,8 @@ int32_t main()
 
             // Create new emitter.
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                const auto mousePosition = GetMousePosition();
+                //const auto mousePosition = GetMousePosition();
+                const auto mousePosition = game.GetMouseWorldPosition();
                 emitters.emplace_back(mousePosition);
                 emitters.back()
                     .SetParticleForce(math::Gravity)

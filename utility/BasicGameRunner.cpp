@@ -238,3 +238,10 @@ Vector2 CBasicGameRunner::GetWindowCenterPosition() const
         static_cast<float>(m_windowHeight) * 0.5f
     };
 }
+
+Vector2 CBasicGameRunner::GetMouseWorldPosition() const
+{
+    const auto mousePos = GetMousePosition();
+    const auto mouseWorldPos = GetScreenToWorld2D(mousePos, m_camera);
+    return mouseWorldPos;
+}

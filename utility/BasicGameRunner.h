@@ -22,7 +22,7 @@ public:
     CBasicGameRunner& operator=(CBasicGameRunner&&) = delete;
 
 public:
-	void RunGame();
+    void RunGame();
     void StopGame();
 
     CBasicGameRunner& SetUpdateCallback(std::function<void()>&& updateCallback);
@@ -42,6 +42,7 @@ public:
     [[nodiscard]] int32_t GetWindowWidth() const;
     [[nodiscard]] int32_t GetWindowHeight() const;
     [[nodiscard]] Vector2 GetWindowCenterPosition() const;
+    [[nodiscard]] Vector2 GetMouseWorldPosition() const;
 
 private:
     std::string m_windowTitle = "Raylib - Nature of Code";
