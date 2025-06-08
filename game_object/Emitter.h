@@ -34,8 +34,8 @@ public:
     CEmitter& SetDrawParticleWithTexture(const bool isDawParticleWithTexture);
     CEmitter& SetParticleTexture(const Texture2D& texture);
 
-    size_t GetParticleCount() const;
-    size_t GetCapacity() const;
+    [[nodiscard]] size_t GetParticleCount() const;
+    [[nodiscard]] size_t GetCapacity() const;
 
 private:
     Vector2 m_position{ Vector2Zero() };
