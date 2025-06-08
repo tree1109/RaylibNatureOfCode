@@ -1,6 +1,7 @@
 #include "Particle.h"
 
 #include <algorithm>
+#include <stdexcept>
 
 CParticle::CParticle(const Vector2& position) :
     m_position(position)
@@ -25,7 +26,20 @@ void CParticle::Draw() const
 
 CParticle& CParticle::ApplyForce(const Vector2& force)
 {
-    m_acceleration += force;
+    m_acceleration += force / m_mass;
+    return *this;
+}
+
+CParticle& CParticle::SetPosition(const Vector2& position)
+{
+    m_position = position;
+    return *this;
+}
+
+CParticle& CParticle::SetMass(const float mass)
+{
+    constexpr float minMass = 0.001f;
+    m_mass = std::max(mass, minMass);
     return *this;
 }
 
