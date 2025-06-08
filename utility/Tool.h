@@ -6,10 +6,12 @@
 #include <raylib.h>
 #include <cstdint>
 
+class CSafeImage;
+
 namespace tool {
     void DrawReferenceCoordinate(const Vector2& origin, const float time);
 
-    Image GenerateBlurCircleImage(const Color& color);
+    CSafeImage GenerateBlurCircleImage(const Color& color);
 }
 
 #endif // !INCLUDE_TOOL_H

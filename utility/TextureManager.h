@@ -7,6 +7,8 @@
 #include <string>
 #include <unordered_map>
 
+class CSafeImage;
+
 class CTextureManager {
 public:
     CTextureManager() = default;
@@ -18,6 +20,7 @@ public:
     CTextureManager& operator=(CTextureManager&&) = default;
 
     void LoadTexture(const char* name, const Image& image);
+    void LoadTexture(const char* name, const CSafeImage& image);
 
     const Texture& GetTexture(const char* name) const;
 

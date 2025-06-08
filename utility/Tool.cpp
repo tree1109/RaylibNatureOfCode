@@ -1,8 +1,9 @@
 #include "Tool.h"
 
+#include <raymath.h>
 #include <stdexcept>
 
-#include "raymath.h"
+#include "SafeImage.h"
 
 void tool::DrawReferenceCoordinate(const Vector2& origin, const float time)
 {
@@ -47,7 +48,7 @@ void tool::DrawReferenceCoordinate(const Vector2& origin, const float time)
     DrawText(TextFormat("Deg: %d", degrees), infoX, (infoY + fontSize * 2), fontSize, BLUE);
 }
 
-Image tool::GenerateBlurCircleImage(const Color& color)
+CSafeImage tool::GenerateBlurCircleImage(const Color& color)
 {
     constexpr int32_t size = 64;
     Image image = GenImageColor(size, size, BLANK);
@@ -70,5 +71,5 @@ Image tool::GenerateBlurCircleImage(const Color& color)
         }
     }
 
-    return image;
+    return CSafeImage{image};
 }

@@ -3,6 +3,8 @@
 #include <ranges>
 #include <stdexcept>
 
+#include "SafeImage.h"
+
 CTextureManager::~CTextureManager()
 {
     for (const auto& texture : m_textures | std::views::values) {
@@ -17,6 +19,16 @@ void CTextureManager::LoadTexture(const char* name, const Image& image)
     }
 
     Texture2D texture = LoadTextureFromImage(image);
+    m_textures[name] = texture;
+}
+
+void CTextureManager::LoadTexture(const char* name, const CSafeImage& image)
+{
+    if (m_textures.contains(name)) {
+        throw std::runtime_error("Texture with this name already exists.");
+    }
+
+    Texture2D texture = LoadTextureFromImage(image.GetImage());
     m_textures[name] = texture;
 }
 
