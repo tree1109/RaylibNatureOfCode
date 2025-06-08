@@ -19,6 +19,8 @@ public:
     CTextureManager(CTextureManager&&) = default;
     CTextureManager& operator=(CTextureManager&&) = default;
 
+    void UnloadTextures();
+
     void LoadTexture(const char* name, const Image& image);
     void LoadTexture(const char* name, const CSafeImage& image);
 

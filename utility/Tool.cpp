@@ -51,7 +51,7 @@ void tool::DrawReferenceCoordinate(const Vector2& origin, const float time)
 
 CSafeImage tool::GenerateBlurCircleImage(const Color& color)
 {
-    constexpr int32_t size = 64;
+    constexpr int32_t size = 16;
     Image image = GenImageColor(size, size, BLANK);
 
     constexpr int32_t cx = size / 2;
@@ -65,7 +65,7 @@ CSafeImage tool::GenerateBlurCircleImage(const Color& color)
             const float dist = sqrtf(dx * dx + dy * dy);
             const float t = 1.0f - (dist / radius);
             if (t > 0) {
-                const float alpha = std::pow(t, 2.5f);
+                const float alpha = std::sin(t);
                 const Color col = ColorAlpha(color, alpha);
                 ImageDrawPixel(&image, x, y, col);
             }

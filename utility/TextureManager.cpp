@@ -12,6 +12,14 @@ CTextureManager::~CTextureManager()
     }
 }
 
+void CTextureManager::UnloadTextures()
+{
+    for (const auto& texture : m_textures | std::views::values) {
+        UnloadTexture(texture);
+    }
+    m_textures.clear();
+}
+
 void CTextureManager::LoadTexture(const char* name, const Image& image)
 {
     if (m_textures.contains(name)) {

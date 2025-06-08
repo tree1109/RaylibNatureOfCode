@@ -44,8 +44,22 @@ void CEmitter::Draw() const
     DrawCircleLinesV(m_position, 5.0f, RED);
 
     // Particle drawing.
-    for (const auto& particle : m_particles) {
-        particle.Draw();
+    if (m_bDrawParticleWithTexture) {
+        // Draw particles with texture center.
+        const Vector2 textureOffset = {
+            static_cast<float>(m_particleTexture.width) * -0.5f,
+            static_cast<float>(m_particleTexture.height) * -0.5f
+        };
+
+        for (const auto& particle : m_particles) {
+            const Vector2 texturePosition = particle.GetPosition() + textureOffset;
+            DrawTextureV(m_particleTexture, texturePosition, WHITE);
+        }
+    }
+    else {
+        for (const auto& particle : m_particles) {
+            particle.Draw();
+        }
     }
 }
 
@@ -98,6 +112,18 @@ CEmitter& CEmitter::SetMaxParticleCount(const int32_t maxCount)
 CEmitter& CEmitter::SetEmitting(const bool isEmitting)
 {
     m_bEmitting = isEmitting;
+    return *this;
+}
+
+CEmitter& CEmitter::SetDrawParticleWithTexture(const bool isDawParticleWithTexture)
+{
+    m_bDrawParticleWithTexture = isDawParticleWithTexture;
+    return *this;
+}
+
+CEmitter& CEmitter::SetParticleTexture(const Texture2D& texture)
+{
+    m_particleTexture = texture;
     return *this;
 }
 

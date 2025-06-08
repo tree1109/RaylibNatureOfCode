@@ -31,6 +31,8 @@ public:
     CEmitter& SetParticleSpawnCountPerFrame(const int32_t count);
     CEmitter& SetMaxParticleCount(const int32_t maxCount);
     CEmitter& SetEmitting(const bool isEmitting);
+    CEmitter& SetDrawParticleWithTexture(const bool isDawParticleWithTexture);
+    CEmitter& SetParticleTexture(const Texture2D& texture);
 
     size_t GetParticleCount() const;
     size_t GetCapacity() const;
@@ -44,6 +46,10 @@ private:
     size_t m_maxParticleCount = 16384;
     bool m_bEmitting{ true };
     std::vector<CParticle> m_particles;
+
+    // TODO: Refactor this with model.
+    bool m_bDrawParticleWithTexture{false};
+    Texture2D m_particleTexture;
 };
 
 #endif //INCLUDE_EMITTER_H
