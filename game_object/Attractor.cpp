@@ -1,9 +1,11 @@
 #include "Attractor.h"
 
+#include <raymath.h>
 #include <cmath>
-#include <stdexcept>
 
-CAttractor::CAttractor(const Vector2& position, float power) :
+#include "Particle.h"
+
+CAttractor::CAttractor(const Vector2& position, const float power) :
     m_position(position),
     m_power(power)
 {
@@ -11,7 +13,7 @@ CAttractor::CAttractor(const Vector2& position, float power) :
 
 void CAttractor::Draw() const
 {
-    DrawCircleV(m_position, std::sqrt(std::abs(m_power)), PURPLE);
+    DrawCircleLinesV(m_position, 10.0f, PURPLE);
 }
 
 CAttractor& CAttractor::SetPosition(const Vector2& position)
@@ -20,7 +22,7 @@ CAttractor& CAttractor::SetPosition(const Vector2& position)
     return *this;
 }
 
-CAttractor& CAttractor::SetPower(float power)
+CAttractor& CAttractor::SetPower(const float power)
 {
     m_power = power;
     return *this;

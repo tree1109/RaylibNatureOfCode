@@ -1,76 +1,72 @@
 #include <raylib.h>
-#include <raymath.h>
 
-#include <algorithm>
-#include <array>
 #include <vector>
-#include <deque>
-#include <set>
-#include <map>
-#include <unordered_set>
-#include <unordered_map>
-#include <cmath>
-#include <concepts>
 #include <cstdint>
 #include <format>
 #include <functional>
-#include <iostream>
 #include <memory>
-#include <numbers>
 #include <numeric>
-#include <random>
-#include <stdexcept>
 #include <string>
-#include <utility>
 
+#include "game_object/Attractor.h"
 #include "game_object/Emitter.h"
+
 #include "utility/BasicGameRunner.h"
 #include "utility/Math.h"
-#include "utility/Tool.h"
 
-#include "game_object/Particle.h"
+#include "game_object/Repeller.h"
 
 int32_t main()
 {
     CBasicGameRunner game;
     game.SetBackgroundColor(GRAY)
+        .AddKeyboardControlsInfo("Q - Create Attractor at mouse position")
+        .AddKeyboardControlsInfo("W - Create Repeller at mouse position")
         .AddKeyboardControlsInfo("E - Clear Emitters")
-        .AddKeyboardControlsInfo("Left Click - Create Emitter");
+        .AddKeyboardControlsInfo("Space - Clear Force Fields")
+        .AddKeyboardControlsInfo("Left Click - Create emitter at mouse position");
 
     const auto center = game.GetWindowCenterPosition();
 
-    std::vector<CParticle> particles;
     std::vector<CEmitter> emitters;
+    std::vector<std::unique_ptr<IForceField>> forceFields;
+
+    const auto AddInitEmitter = [&]() {
+        // Create an initial emitter at the center of the screen.
+        emitters.emplace_back(center);
+    };
+
+    // Add initial emitter.
+    AddInitEmitter();
 
     auto update = [&]() {
-        // Particles.
-        {
-            particles.erase(std::ranges::remove_if(particles, [](const CParticle& particle) {
-                return particle.IsDead();
-            }).begin(), particles.end());
-
-            constexpr int32_t kParticleCountSpawnPerFrame = 10;
-            for (int32_t i = 0; i < kParticleCountSpawnPerFrame; i++) {
-                particles.emplace_back(center);
-            }
-
-            particles.emplace_back(center);
-
-            for (auto& particle : particles) {
-                const Vector2 randomForce = math::GetRandomGaussianVector2(10.0f);
-
-                particle.ApplyForce(math::Gravity);
-                particle.ApplyForce(randomForce);
-                particle.Update();
-            }
-        }
-
         // Emitter.
         {
+            // Create attractor.
+            if (IsKeyPressed(KEY_Q)) {
+                const auto mousePosition = game.GetMouseWorldPosition();
+                auto pAttractor = std::make_unique<CAttractor>(mousePosition, 1000.0f);
+                forceFields.emplace_back(std::move(pAttractor));
+            }
+
+            // Create repeller.
+            if (IsKeyPressed(KEY_W)) {
+                const auto mousePosition = game.GetMouseWorldPosition();
+                auto pRepeller = std::make_unique<CRepeller>(mousePosition, 1000.0f);
+                forceFields.emplace_back(std::move(pRepeller));
+            }
+
             // Remove all emitters.
             if (IsKeyPressed(KEY_E)) {
                 emitters.clear();
                 emitters.shrink_to_fit();
+                AddInitEmitter();
+            }
+
+            // Remove all particle force fields.
+            if (IsKeyPressed(KEY_SPACE)) {
+                forceFields.clear();
+                forceFields.shrink_to_fit();
             }
 
             // Create new emitter.
@@ -81,7 +77,14 @@ int32_t main()
             }
 
             for (auto& emitter : emitters) {
+                // Gravity force.
                 emitter.ApplyForce(math::Gravity);
+
+                // Force fields.
+                for (const auto& forceField : forceFields) {
+                    emitter.ApplyForceField(*forceField);
+                }
+
                 emitter.Update();
             }
         }
@@ -89,9 +92,9 @@ int32_t main()
 
     // Draw world here
     auto drawWorld = [&]() {
-        // Particles.
-        for (const auto& particle : particles) {
-            particle.Draw();
+        // Force fields.
+        for (const auto& forceField : forceFields) {
+            forceField->Draw();
         }
 
         // Emitter.
@@ -101,12 +104,10 @@ int32_t main()
     };
 
     auto drawUi = [&] {
-        const size_t totalParticleCount = particles.size() +
-            std::accumulate(emitters.begin(), emitters.end(), size_t(),
+        const size_t totalParticleCount = std::accumulate(emitters.begin(), emitters.end(), size_t(),
                             [](size_t sum, const CEmitter& emitter) { return sum + emitter.GetParticleCount(); });
 
-        const size_t totalCapacity = particles.capacity() +
-            std::accumulate(emitters.begin(), emitters.end(), size_t(),
+        const size_t totalCapacity = std::accumulate(emitters.begin(), emitters.end(), size_t(),
                             [](size_t sum, const CEmitter& emitter) { return sum + emitter.GetCapacity(); });
 
         // Particle count.

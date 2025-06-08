@@ -1,9 +1,11 @@
 #include "Repeller.h"
 
+#include <raymath.h>
 #include <cmath>
-#include <stdexcept>
 
-CRepeller::CRepeller(const Vector2& position, float power) :
+#include "Particle.h"
+
+CRepeller::CRepeller(const Vector2& position, const float power) :
     m_position(position),
     m_power(power)
 {
@@ -11,10 +13,10 @@ CRepeller::CRepeller(const Vector2& position, float power) :
 
 void CRepeller::Draw() const
 {
-    DrawCircleV(m_position, std::sqrt(std::abs(m_power)), YELLOW);
+    DrawCircleLinesV(m_position, 10.0f, YELLOW);
 }
 
-CRepeller& CRepeller::SetPower(float power)
+CRepeller& CRepeller::SetPower(const float power)
 {
     m_power = power;
     return *this;

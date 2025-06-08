@@ -4,21 +4,19 @@
 #define INCLUDE_ATTRACTOR_H
 
 #include <raylib.h>
-#include <raymath.h>
 
 #include "IForceField.h"
-#include "Particle.h"
 
 class CAttractor : public IForceField
 {
 public:
-    CAttractor(const Vector2& position, float power);
+    CAttractor(const Vector2& position, const float power);
     ~CAttractor() override = default;
 
     void Draw() const override;
 
     CAttractor& SetPosition(const Vector2& position);
-    CAttractor& SetPower(float power);
+    CAttractor& SetPower(const float power);
 
     Vector2 GetForce(CParticle& particle) const override;
 

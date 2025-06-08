@@ -4,21 +4,19 @@
 #define INCLUDE_REPELLER_H
 
 #include <raylib.h>
-#include <raymath.h>
 
 #include "IForceField.h"
-#include "Particle.h"
 
 class CRepeller : public IForceField
 {
 public:
-    CRepeller(const Vector2& position, float power);
+    CRepeller(const Vector2& position, const float power);
     ~CRepeller() override = default;
 
     void Draw() const override;
 
     CRepeller& SetPosition(const Vector2& position);
-    CRepeller& SetPower(float power);
+    CRepeller& SetPower(const float power);
 
     Vector2 GetForce(CParticle& particle) const override;
 
