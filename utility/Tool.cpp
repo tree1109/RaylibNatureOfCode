@@ -1,6 +1,7 @@
 #include "Tool.h"
 
 #include <raymath.h>
+#include <cmath>
 #include <stdexcept>
 
 #include "SafeImage.h"
@@ -64,8 +65,8 @@ CSafeImage tool::GenerateBlurCircleImage(const Color& color)
             const float dist = sqrtf(dx * dx + dy * dy);
             const float t = 1.0f - (dist / radius);
             if (t > 0) {
-                const auto alpha = static_cast<uint8_t>(powf(t, 2.5f) * 255.0f);
-                const Color col = {255, 255, 255, alpha};
+                const float alpha = std::pow(t, 2.5f);
+                const Color col = ColorAlpha(color, alpha);
                 ImageDrawPixel(&image, x, y, col);
             }
         }

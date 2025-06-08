@@ -46,15 +46,19 @@ void CBasicGameRunner::RunGame()
 
     ResetCamera();
 
-    while (!WindowShouldClose() && m_isGameRunning)
-    {
+    // Initialize.
+    if (m_initCallback) {
+        m_initCallback();
+    }
+
+    // Update loop.
+    while (!WindowShouldClose() && m_isGameRunning) {
         // Update.
         {
             // Update camera.
             {
                 // Translate based on mouse right click
-                if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-                {
+                if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
                     Vector2 delta = GetMouseDelta();
                     delta = Vector2Scale(delta, -1.0f / m_camera.zoom);
                     m_camera.target = Vector2Add(m_camera.target, delta);
@@ -62,8 +66,7 @@ void CBasicGameRunner::RunGame()
 
                 // Zoom based on mouse wheel
                 float wheel = GetMouseWheelMove();
-                if (!FloatEquals(wheel, 0.0f))
-                {
+                if (!FloatEquals(wheel, 0.0f)) {
                     // Get the world point that is under the mouse
                     const Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), m_camera);
 
@@ -81,15 +84,13 @@ void CBasicGameRunner::RunGame()
                 }
 
                 // Reset camera if 'R' key is pressed
-                if (IsKeyPressed(KEY_R))
-                {
+                if (IsKeyPressed(KEY_R)) {
                     ResetCamera();
                 }
             }
 
             // Update world.
-            if (m_updateCallback)
-            {
+            if (m_updateCallback) {
                 m_updateCallback();
             }
         }
@@ -99,8 +100,7 @@ void CBasicGameRunner::RunGame()
         ClearBackground(m_backgroundColor);
         BeginMode2D(m_camera);
         // Draw world.
-        if (m_drawWorldCallback)
-        {
+        if (m_drawWorldCallback) {
             m_drawWorldCallback();
         }
         EndMode2D();
@@ -109,18 +109,16 @@ void CBasicGameRunner::RunGame()
         // Draw to screen.
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawTexturePro(canvas.texture, sourceRectangle, destRectangle, { 0.0f, 0.0f }, 0.0f, WHITE);
+        DrawTexturePro(canvas.texture, sourceRectangle, destRectangle, {0.0f, 0.0f}, 0.0f, WHITE);
         // Draw UI.
         {
             // Draw UI.
-            if (m_drawUiCallback)
-            {
+            if (m_drawUiCallback) {
                 m_drawUiCallback();
             }
 
             // Keyboard info.
-            for (int32_t i = 0; const std::string& info : m_keyboardControlsInfo)
-            {
+            for (int32_t i = 0; const std::string& info : m_keyboardControlsInfo) {
                 constexpr int32_t fontSize = 20;
                 constexpr auto fontColor = BLACK;
 
@@ -135,25 +133,44 @@ void CBasicGameRunner::RunGame()
 
             // Camera info.
             if (m_isDrawCameraInfo) {
-                DrawText(TextFormat("Camera Offset: (%.2f, %.2f)", m_camera.offset.x, m_camera.offset.y), 10, 100, 20, BLACK);
-                DrawText(TextFormat("Camera Target: (%.2f, %.2f)", m_camera.target.x, m_camera.target.y), 10, 120, 20, BLACK);
+                DrawText(TextFormat("Camera Offset: (%.2f, %.2f)", m_camera.offset.x, m_camera.offset.y), 10, 100, 20,
+                         BLACK);
+                DrawText(TextFormat("Camera Target: (%.2f, %.2f)", m_camera.target.x, m_camera.target.y), 10, 120, 20,
+                         BLACK);
                 DrawText(TextFormat("Camera Zoom: %.2f", m_camera.zoom), 10, 140, 20, BLACK);
             }
 
             // Draw FPS.
-            if (m_isDrawFPS)
-            {
+            if (m_isDrawFPS) {
                 DrawFPS(0, 0);
             }
         }
         EndDrawing();
     }
+
+    // De-Initialize.
+    if (m_deInitCallback) {
+        m_deInitCallback();
+    }
+
     CloseWindow();
 }
 
 void CBasicGameRunner::StopGame()
 {
     m_isGameRunning = false;
+}
+
+CBasicGameRunner& CBasicGameRunner::SetInitCallback(std::function<void()>&& initCallback)
+{
+    m_initCallback = std::move(initCallback);
+    return *this;
+}
+
+CBasicGameRunner& CBasicGameRunner::SetDeInitCallback(std::function<void()>&& deInitCallback)
+{
+    m_deInitCallback = std::move(deInitCallback);
+    return *this;
 }
 
 CBasicGameRunner& CBasicGameRunner::SetUpdateCallback(std::function<void()>&& updateCallback)

@@ -25,6 +25,8 @@ public:
     void RunGame();
     void StopGame();
 
+    CBasicGameRunner& SetInitCallback(std::function<void()>&& initCallback);
+    CBasicGameRunner& SetDeInitCallback(std::function<void()>&& deInitCallback);
     CBasicGameRunner& SetUpdateCallback(std::function<void()>&& updateCallback);
     CBasicGameRunner& SetDrawWorldCallback(std::function<void()>&& drawWorldCallback);
     CBasicGameRunner& SetDrawUiCallback(std::function<void()>&& drawUiCallback);
@@ -60,6 +62,8 @@ private:
     bool m_isDrawCameraInfo = false;
     bool m_isDrawFPS = true;
 
+    std::function<void()> m_initCallback;
+    std::function<void()> m_deInitCallback;
     std::function<void()> m_updateCallback;
     std::function<void()> m_drawWorldCallback;
     std::function<void()> m_drawUiCallback;
