@@ -36,30 +36,25 @@ int32_t main()
     const auto center = game.GetWindowCenterPosition();
 
     // Init here.
-    auto init = []()
-    {
+    auto init = [&]() {
     };
 
     // DeInit here.
-    auto deInit = []()
-    {
+    auto deInit = [&]() {
     };
 
     // Update logic here
-    auto update = [&]
-    {
+    auto update = [&] {
     };
 
     // Draw world here
-    auto drawWorld = [&]
-    {
+    auto drawWorld = [&] {
         const double time = GetTime();
         const float deltaTime = GetFrameTime();
     };
 
     // Draw UI here
-    auto drawUi = [&]
-    {
+    auto drawUi = [&] {
     };
 
     // Set callbacks and run the game.
