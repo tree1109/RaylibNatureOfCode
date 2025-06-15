@@ -120,7 +120,7 @@ void CBasicGameRunner::RunGame()
             // Keyboard info.
             for (int32_t i = 0; const std::string& info : m_keyboardControlsInfo) {
                 constexpr int32_t fontSize = 20;
-                constexpr auto fontColor = BLACK;
+                const Color fontColor = m_infoFontColor;
 
                 constexpr int32_t textXAlignment = 10;
                 constexpr int32_t textYStartPos = 40;
@@ -226,6 +226,12 @@ CBasicGameRunner & CBasicGameRunner::SetBackgroundColor(const Color &color)
 CBasicGameRunner& CBasicGameRunner::AddKeyboardControlsInfo(std::string&& info)
 {
     m_keyboardControlsInfo.emplace_back(std::move(info));
+    return *this;
+}
+
+CBasicGameRunner& CBasicGameRunner::SetInfoFontColor(const Color& color)
+{
+    m_infoFontColor = color;
     return *this;
 }
 

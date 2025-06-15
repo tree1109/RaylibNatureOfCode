@@ -49,9 +49,9 @@ void tool::DrawReferenceCoordinate(const Vector2& origin, const float time)
     DrawText(TextFormat("Deg: %d", degrees), infoX, (infoY + fontSize * 2), fontSize, BLUE);
 }
 
-CSafeImage tool::GenerateBlurCircleImage(const Color& color)
+CSafeImage tool::GenerateBlurCircleImage(const Color& color, const float maxAlpha)
 {
-    constexpr int32_t size = 16;
+    constexpr int32_t size = 64;
     Image image = GenImageColor(size, size, BLANK);
 
     constexpr int32_t cx = size / 2;
@@ -65,7 +65,7 @@ CSafeImage tool::GenerateBlurCircleImage(const Color& color)
             const float dist = sqrtf(dx * dx + dy * dy);
             const float t = 1.0f - (dist / radius);
             if (t > 0) {
-                const float alpha = std::sin(t);
+                const float alpha = std::sin(t) * maxAlpha;
                 const Color col = ColorAlpha(color, alpha);
                 ImageDrawPixel(&image, x, y, col);
             }

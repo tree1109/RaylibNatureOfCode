@@ -36,7 +36,8 @@
 int32_t main()
 {
     CBasicGameRunner game;
-    game.SetBackgroundColor(GRAY)
+    game.SetBackgroundColor(BLACK)
+        .SetInfoFontColor(RAYWHITE)
         .AddKeyboardControlsInfo("E - Clear Emitters")
         .AddKeyboardControlsInfo("Left Click - Blow wind according mouse position");
 
@@ -53,12 +54,13 @@ int32_t main()
 
         fireEmitters.back()
             .SetDrawParticleWithTexture(true)
-            .SetParticleTexture(textureManager.GetTexture("fire"));
+            .SetParticleTexture(textureManager.GetTexture("fire"))
+            .SetParticleSpawnCountPerFrame(1);
     };
 
     // Init here.
     auto init = [&]() {
-        auto fireImage = tool::GenerateBlurCircleImage(RED);
+        auto fireImage = tool::GenerateBlurCircleImage(PINK, 0.1f);
         textureManager.LoadTexture("fire", fireImage);
 
         reset();
@@ -101,9 +103,11 @@ int32_t main()
         const double time = GetTime();
         const float deltaTime = GetFrameTime();
 
+        BeginBlendMode(BLEND_ADDITIVE);
         for (const auto& emitter : fireEmitters) {
             emitter.Draw();
         }
+        EndBlendMode();
     };
 
     // Draw UI here

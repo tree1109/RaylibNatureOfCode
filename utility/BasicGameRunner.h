@@ -38,6 +38,7 @@ public:
     CBasicGameRunner& SetBackgroundColor(const Color& color);
 
     CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info);
+    CBasicGameRunner& SetInfoFontColor(const Color& color);
 
     CBasicGameRunner& ResetCamera();
 
@@ -53,6 +54,7 @@ private:
     int32_t m_windowTargetFPS = 60;
 
     Color m_backgroundColor = RAYWHITE;
+    Color m_infoFontColor = BLACK;
 
     std::vector<std::string> m_keyboardControlsInfo;
 

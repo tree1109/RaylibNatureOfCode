@@ -11,7 +11,7 @@ class CSafeImage;
 namespace tool {
     void DrawReferenceCoordinate(const Vector2& origin, const float time);
 
-    CSafeImage GenerateBlurCircleImage(const Color& color);
+    CSafeImage GenerateBlurCircleImage(const Color& color, float maxAlpha);
 }
 
 #endif // !INCLUDE_TOOL_H
