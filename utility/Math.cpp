@@ -68,7 +68,7 @@ Vector2 math::GetRandomDirection()
     static std::mt19937 gen(rd());
     std::uniform_real_distribution<float> dist(0.0f, std::numbers::pi_v<float> * 2.0f);
     float rad = dist(gen);
-    return {std::cosf(rad), std::sinf(rad)};
+    return {std::cos(rad), std::sin(rad)};
 }
 
 Vector2 math::GetRandomVector2(const float scale)

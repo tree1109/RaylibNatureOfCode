@@ -3,6 +3,8 @@
 #include "IForceField.h"
 #include "utility/Math.h"
 
+#include <algorithm>
+
 CEmitter::CEmitter(const Vector2& position) :
     m_position(position) {}
 
