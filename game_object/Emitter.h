@@ -26,12 +26,15 @@ public:
 
     CEmitter& ApplyForce(const Vector2& force);
     CEmitter& ApplyForceField(const IForceField& forceField);
+    CEmitter& SetTint(const Color& tint);
     CEmitter& SetPosition(const Vector2& position);
     CEmitter& SetParticleInitialForce(const Vector2& force);
     CEmitter& SetParticleLifeTime(const float lifeTime);
     CEmitter& SetParticleSpawnCountPerFrame(const int32_t count);
     CEmitter& SetMaxParticleCount(const int32_t maxCount);
     CEmitter& SetEmitting(const bool isEmitting);
+    CEmitter& SetRandomColor(const bool isRandomColor);
+
     CEmitter& SetDrawParticleWithTexture(const bool isDawParticleWithTexture);
     CEmitter& SetParticleTexture(const Texture2D& texture);
 
@@ -39,6 +42,7 @@ public:
     [[nodiscard]] size_t GetCapacity() const;
 
 private:
+    Color m_tint{ WHITE };
     Vector2 m_position{ Vector2Zero() };
     Vector2 m_initialForce{Vector2Zero()};
     Vector2 m_force{ Vector2Zero() };
@@ -46,6 +50,7 @@ private:
     size_t m_particleSpawnCountPerFrame{ 10 };
     size_t m_maxParticleCount = 16384;
     bool m_bEmitting{ true };
+    bool m_bRandomColor{ false };
     std::vector<CParticle> m_particles;
 
     // TODO: Refactor this with model.

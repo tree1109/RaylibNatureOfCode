@@ -19,14 +19,24 @@ void CParticle::Update()
 
 void CParticle::Draw() const
 {
-    const float value = std::max(m_lifeTimeRemaining, 0.0f) / m_lifeTime;
-    const auto color = ColorFromHSV(90.0f, 1.0f, value);
-    DrawPixelV(m_position, color);
+    DrawPixelV(m_position, ColorTint(m_color, m_tint));
 }
 
 CParticle& CParticle::ApplyForce(const Vector2& force)
 {
     m_acceleration += force / m_mass;
+    return *this;
+}
+
+CParticle& CParticle::SetColor(const Color& color)
+{
+    m_color = color;
+    return *this;
+}
+
+CParticle& CParticle::SetTint(const Color& color)
+{
+    m_tint = color;
     return *this;
 }
 
@@ -49,6 +59,10 @@ CParticle& CParticle::SetLifeTime(const float& lifeTime)
     m_lifeTimeRemaining = lifeTime;
     return *this;
 }
+Color CParticle::GetColor() const
+{
+    return ColorTint(m_color, m_tint);
+}
 
 Vector2 CParticle::GetPosition() const
 {
@@ -68,6 +82,16 @@ Vector2 CParticle::GetAcceleration() const
 float CParticle::GetMass() const
 {
     return m_mass;
+}
+
+float CParticle::GetLifeTime() const
+{
+    return m_lifeTime;
+}
+
+float CParticle::GetLifeTimeRemaining() const
+{
+    return m_lifeTimeRemaining;
 }
 
 bool CParticle::IsDead() const

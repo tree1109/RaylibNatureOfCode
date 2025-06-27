@@ -34,6 +34,7 @@ int32_t main()
     const auto AddInitEmitter = [&]() {
         // Create an initial emitter at the center of the screen.
         emitters.emplace_back(center);
+        emitters.back().SetRandomColor(true);
     };
 
     // Add initial emitter.

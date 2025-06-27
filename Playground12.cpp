@@ -3,34 +3,34 @@
 
 #include <algorithm>
 #include <array>
-#include <vector>
-#include <deque>
-#include <set>
-#include <map>
-#include <unordered_set>
-#include <unordered_map>
 #include <cmath>
 #include <concepts>
 #include <cstdint>
+#include <deque>
+#include <filesystem>
 #include <format>
 #include <functional>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <numbers>
 #include <numeric>
 #include <random>
+#include <set>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <utility>
-#include <filesystem>
+#include <vector>
 
-#include "utility/BasicGameRunner.h"
-#include "utility/Math.h"
-#include "utility/Tool.h"
 #include "game_object/Emitter.h"
 #include "game_object/RandomField.h"
+#include "utility/BasicGameRunner.h"
+#include "utility/Math.h"
 #include "utility/SafeImage.h"
 #include "utility/TextureManager.h"
+#include "utility/Tool.h"
 
 // Template for the main function.
 int32_t main()
@@ -53,6 +53,8 @@ int32_t main()
         fireEmitters.emplace_back(center);
 
         fireEmitters.back()
+            .SetRandomColor(true)
+            .SetTint(PINK)
             .SetDrawParticleWithTexture(true)
             .SetParticleTexture(textureManager.GetTexture("fire"))
             .SetParticleSpawnCountPerFrame(1);
@@ -60,16 +62,14 @@ int32_t main()
 
     // Init here.
     auto init = [&]() {
-        auto fireImage = tool::GenerateBlurCircleImage(PINK, 0.1f);
+        const auto fireImage = tool::GenerateBlurCircleImage(WHITE, 0.1f);
         textureManager.LoadTexture("fire", fireImage);
 
         reset();
     };
 
     // DeInit here.
-    auto deInit = [&]() {
-        textureManager.UnloadTextures();
-    };
+    auto deInit = [&]() { textureManager.UnloadTextures(); };
 
     // Update logic here
     auto update = [&] {
@@ -88,7 +88,7 @@ int32_t main()
             return {};
         }();
 
-        const Vector2 floatForce = { 0.0f, -50.0f };
+        const Vector2 floatForce = {0.0f, -50.0f};
 
         for (auto& emitter : fireEmitters) {
             emitter.ApplyForce(windForce);
@@ -111,8 +111,7 @@ int32_t main()
     };
 
     // Draw UI here
-    auto drawUi = [&] {
-    };
+    auto drawUi = [&] {};
 
     // Set callbacks and run the game.
     game.SetInitCallback(init)

@@ -21,10 +21,17 @@ void CEmitter::Update()
             // Break if the maximum particle count is reached.
             if (m_particles.size() >= m_maxParticleCount) { break; }
 
+
+
             m_particles.emplace_back(m_position);
             m_particles.back()
                        .SetLifeTime(m_particleLifeTime)
                        .ApplyForce(m_initialForce);
+
+            if (m_bRandomColor) {
+                const Color color = ColorFromHSV(math::GetRandomValue(0.0f, 360.0f), 1.0f, 1.0f);
+                m_particles.back().SetColor(color);
+            }
         }
     }
 
@@ -32,6 +39,13 @@ void CEmitter::Update()
     for (auto& particle : m_particles) {
         const auto randomForce = math::GetRandomGaussianVector2(10.0f);
         const Vector2 netForce = m_force + randomForce;
+
+        // Set color based on life-time remaining.
+        {
+            const float value = std::max(particle.GetLifeTimeRemaining(), 0.0f) / particle.GetLifeTime();
+            const auto tint = ColorAlpha(ColorFromHSV(0.0f, 0.0f, value), std::sqrt(value));
+            particle.SetTint(tint);
+        }
 
         particle.ApplyForce(netForce);
         particle.Update();
@@ -55,7 +69,7 @@ void CEmitter::Draw() const
 
         for (const auto& particle : m_particles) {
             const Vector2 texturePosition = particle.GetPosition() + textureOffset;
-            DrawTextureV(m_particleTexture, texturePosition, WHITE);
+            DrawTextureV(m_particleTexture, texturePosition, ColorTint(particle.GetColor(), m_tint));
         }
     }
     else {
@@ -77,6 +91,11 @@ CEmitter& CEmitter::ApplyForceField(const IForceField& forceField)
         const Vector2 force = forceField.GetForce(particle);
         particle.ApplyForce(force);
     }
+    return *this;
+}
+CEmitter& CEmitter::SetTint(const Color& tint)
+{
+    m_tint = tint;
     return *this;
 }
 
@@ -114,6 +133,11 @@ CEmitter& CEmitter::SetMaxParticleCount(const int32_t maxCount)
 CEmitter& CEmitter::SetEmitting(const bool isEmitting)
 {
     m_bEmitting = isEmitting;
+    return *this;
+}
+CEmitter& CEmitter::SetRandomColor(const bool isRandomColor)
+{
+    m_bRandomColor = isRandomColor;
     return *this;
 }
 

@@ -15,17 +15,24 @@ public:
     void Draw() const;
 
     CParticle& ApplyForce(const Vector2& force);
+    CParticle& SetColor(const Color& color);
+    CParticle& SetTint(const Color& color);
     CParticle& SetPosition(const Vector2& position);
     CParticle& SetMass(const float mass);
     CParticle& SetLifeTime(const float& lifeTime);
 
+    [[nodiscard]] Color GetColor() const;
     [[nodiscard]] Vector2 GetPosition() const;
     [[nodiscard]] Vector2 GetVelocity() const;
     [[nodiscard]] Vector2 GetAcceleration() const;
     [[nodiscard]] float GetMass() const;
+    [[nosiscard]] float GetLifeTime() const;
+    [[nodiscard]] float GetLifeTimeRemaining() const;
     [[nodiscard]] bool IsDead() const;
 
 private:
+    Color m_color = WHITE;
+    Color m_tint = WHITE;
     Vector2 m_position = Vector2Zeros;
     Vector2 m_velocity = Vector2Zeros;
     Vector2 m_acceleration = Vector2Zeros;
