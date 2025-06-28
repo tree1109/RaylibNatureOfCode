@@ -51,19 +51,10 @@ endfunction()
 
 # Set include paths.
 include_directories(${PROJECT_SOURCE_DIR})
-
-# Utility source files.
-file(GLOB UTILITY_SRC_H "${PROJECT_SOURCE_DIR}/utility/*.h")
-file(GLOB UTILITY_SRC_CPP "${PROJECT_SOURCE_DIR}/utility/*.cpp")
-set(UTILITY_SRC ${UTILITY_SRC_H} ${UTILITY_SRC_CPP})
-
-# Game objects source files.
-file(GLOB GAME_OBJECT_SRC_H "${PROJECT_SOURCE_DIR}/game_object/*.h")
-file(GLOB GAME_OBJECT_SRC_CPP "${PROJECT_SOURCE_DIR}/game_object/*.cpp")
-set(GAME_OBJECT_SRC ${GAME_OBJECT_SRC_H} ${GAME_OBJECT_SRC_CPP})
-
 # All source files.
-set(SOURCE_FILES ${UTILITY_SRC} ${GAME_OBJECT_SRC})
+file(GLOB UTILITY_SRC_CPP "${PROJECT_SOURCE_DIR}/utility/*.cpp")
+file(GLOB GAME_OBJECT_SRC_CPP "${PROJECT_SOURCE_DIR}/game_object/*.cpp")
+set(SOURCE_FILES ${UTILITY_SRC_CPP} ${GAME_OBJECT_SRC_CPP})
 
 # Main executable.
 MyAddExecutable(${PROJECT_NAME} ${SOURCE_FILES})
