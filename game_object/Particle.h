@@ -26,7 +26,7 @@ public:
     [[nodiscard]] Vector2 GetVelocity() const;
     [[nodiscard]] Vector2 GetAcceleration() const;
     [[nodiscard]] float GetMass() const;
-    [[nosiscard]] float GetLifeTime() const;
+    [[nodiscard]] float GetLifeTime() const;
     [[nodiscard]] float GetLifeTimeRemaining() const;
     [[nodiscard]] bool IsDead() const;
 

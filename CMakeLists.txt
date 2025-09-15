@@ -43,29 +43,35 @@ macro(RaylibOtherPlatform EXECUTABLE_NAME)
     endif()
 endmacro()
 
-# My function.
-function(MyAddExecutable EXECUTABLE_NAME)
-    add_executable (${EXECUTABLE_NAME} "${EXECUTABLE_NAME}.cpp" ${ARGN})
+# My function for main executable.
+function(MyAddMainExecutable EXECUTABLE_NAME MAIN_SOURCE)
+    add_executable (${EXECUTABLE_NAME} "${MAIN_SOURCE}" ${ARGN})
+    target_link_libraries(${EXECUTABLE_NAME} raylib)
+endfunction()
+
+# My function for example executables.
+function(MyAddExampleExecutable EXECUTABLE_NAME EXAMPLE_SOURCE)
+    add_executable (${EXECUTABLE_NAME} "${EXAMPLE_SOURCE}" ${ARGN})
     target_link_libraries(${EXECUTABLE_NAME} raylib)
 endfunction()
 
 # Set include paths.
 include_directories(${PROJECT_SOURCE_DIR})
-# All source files.
+# All shared source files.
 file(GLOB UTILITY_SRC_CPP "${PROJECT_SOURCE_DIR}/utility/*.cpp")
 file(GLOB GAME_OBJECT_SRC_CPP "${PROJECT_SOURCE_DIR}/game_object/*.cpp")
-set(SOURCE_FILES ${UTILITY_SRC_CPP} ${GAME_OBJECT_SRC_CPP})
+set(SHARED_SOURCE_FILES ${UTILITY_SRC_CPP} ${GAME_OBJECT_SRC_CPP})
 
 # Main executable.
-MyAddExecutable(${PROJECT_NAME} ${SOURCE_FILES})
+MyAddMainExecutable(${PROJECT_NAME} "src/${PROJECT_NAME}.cpp" ${SHARED_SOURCE_FILES})
 RaylibOtherPlatform(${PROJECT_NAME})
 message(STATUS "Add executable: ${PROJECT_NAME}")
 
-# Playground executables.
+# Example executables.
 set(PLAYGROUND_LIST 1 2 3 4 5 6 7 8 9 10 11 12)
 foreach(NUM ${PLAYGROUND_LIST})
     set(EXECUTABLE_NAME "Playground${NUM}")
-    MyAddExecutable(${EXECUTABLE_NAME} ${SOURCE_FILES})
+    MyAddExampleExecutable(${EXECUTABLE_NAME} "examples/${EXECUTABLE_NAME}.cpp" ${SHARED_SOURCE_FILES})
     RaylibOtherPlatform(${EXECUTABLE_NAME})
     message(STATUS "Add executable: ${EXECUTABLE_NAME}")
 endforeach()
