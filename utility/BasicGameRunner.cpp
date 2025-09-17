@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <ranges>
 #include <raymath.h>
 
 #include "manager/IManager.h"
@@ -55,9 +56,9 @@ void CBasicGameRunner::RunGame()
         if (m_initCallback) {
             m_initCallback();
         }
-        // Playgrounds.
-        for (const auto& p : m_playgrounds) {
-            p->Init();
+        // Managers.
+        for (const auto& manager : m_managers | std::views::values) {
+            manager->Init();
         }
     }
 
@@ -187,6 +188,10 @@ void CBasicGameRunner::RunGame()
         // Playgrounds.
         for (const auto& p : m_playgrounds) {
             p->DeInit();
+        }
+        // Managers.
+        for (const auto& manager : m_managers | std::views::values) {
+            manager->DeInit();
         }
     }
 
