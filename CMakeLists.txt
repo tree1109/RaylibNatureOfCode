@@ -54,7 +54,16 @@ include_directories(${PROJECT_SOURCE_DIR})
 # All source files.
 file(GLOB UTILITY_SRC_CPP "${PROJECT_SOURCE_DIR}/utility/*.cpp")
 file(GLOB GAME_OBJECT_SRC_CPP "${PROJECT_SOURCE_DIR}/game_object/*.cpp")
-set(SOURCE_FILES ${UTILITY_SRC_CPP} ${GAME_OBJECT_SRC_CPP})
+file(GLOB PLAYGROUND_SRC_CPP "${PROJECT_SOURCE_DIR}/playground/*.cpp")
+file(GLOB MANAGER_SRC_CPP "${PROJECT_SOURCE_DIR}/manager/*.cpp")
+file(GLOB SERVICE_SRC_CPP "${PROJECT_SOURCE_DIR}/service/*.cpp")
+set(SOURCE_FILES
+    ${UTILITY_SRC_CPP}
+    ${GAME_OBJECT_SRC_CPP}
+    ${PLAYGROUND_SRC_CPP}
+    ${MANAGER_SRC_CPP}
+    ${SERVICE_SRC_CPP}
+)
 
 # Main executable.
 MyAddExecutable(${PROJECT_NAME} ${SOURCE_FILES})

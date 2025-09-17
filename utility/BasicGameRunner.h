@@ -4,17 +4,27 @@
 #define INCLUDE_BASIC_GAME_RUNNER_H
 
 #include <raylib.h>
-#include <cstdint>
 #include <functional>
 #include <string>
 
-class CBasicGameRunner
+#include "IGame.h"
+
+#include "service/IService.h"
+#include "manager/IManager.h"
+
+namespace playground
+{
+    class IPlayground;
+}
+
+
+class CBasicGameRunner final : public IGame
 {
 public:
     CBasicGameRunner();
     CBasicGameRunner(const int32_t width, const int32_t height);
     CBasicGameRunner(const int32_t width, const int32_t height, const int32_t targetFPS);
-    ~CBasicGameRunner() = default;
+    ~CBasicGameRunner() override = default;
 
     CBasicGameRunner(const CBasicGameRunner&) = delete;
     CBasicGameRunner& operator=(const CBasicGameRunner&) = delete;
@@ -42,10 +52,20 @@ public:
 
     CBasicGameRunner& ResetCamera();
 
-    [[nodiscard]] int32_t GetWindowWidth() const;
-    [[nodiscard]] int32_t GetWindowHeight() const;
-    [[nodiscard]] Vector2 GetWindowCenterPosition() const;
-    [[nodiscard]] Vector2 GetMouseWorldPosition() const;
+    CBasicGameRunner& AddPlayground(std::unique_ptr<playground::IPlayground>&& playground);
+    CBasicGameRunner& NextPlayground();
+    CBasicGameRunner& PreviousPlayground();
+
+    CBasicGameRunner& AddService(std::unique_ptr<IService>&& service);
+    CBasicGameRunner& AddManager(std::unique_ptr<IManager>&& manager);
+
+    IService& GetService(const std::string_view& serviceName) override;
+    IManager& GetManager(const std::string_view& managerName) override;
+
+    [[nodiscard]] int32_t GetWindowWidth() const override;
+    [[nodiscard]] int32_t GetWindowHeight() const override;
+    [[nodiscard]] Vector2 GetWindowCenterPosition() const override;
+    [[nodiscard]] Vector2 GetMouseWorldPosition() const override;
 
 private:
     std::string m_windowTitle = "Raylib - Nature of Code";
@@ -69,6 +89,11 @@ private:
     std::function<void()> m_updateCallback;
     std::function<void()> m_drawWorldCallback;
     std::function<void()> m_drawUiCallback;
+
+    std::vector<std::unique_ptr<playground::IPlayground>> m_playgrounds;
+
+    std::unordered_map<std::string, std::unique_ptr<IService>> m_services;
+    std::unordered_map<std::string, std::unique_ptr<IManager>> m_managers;
 };
 
 #endif // INCLUDE_BASIC_GAME_RUNNER_H

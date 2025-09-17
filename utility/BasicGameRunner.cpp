@@ -1,8 +1,12 @@
 #include "BasicGameRunner.h"
 
-#include <raymath.h>
 #include <algorithm>
-#include <stdexcept>
+#include <cassert>
+#include <raymath.h>
+
+#include "manager/IManager.h"
+#include "playground/IPlayground.h"
+#include "service/IService.h"
 
 CBasicGameRunner::CBasicGameRunner()
     : CBasicGameRunner(800, 600, 60)
@@ -47,8 +51,14 @@ void CBasicGameRunner::RunGame()
     ResetCamera();
 
     // Initialize.
-    if (m_initCallback) {
-        m_initCallback();
+    {
+        if (m_initCallback) {
+            m_initCallback();
+        }
+        // Playgrounds.
+        for (const auto& p : m_playgrounds) {
+            p->Init();
+        }
     }
 
     // Update loop.
@@ -90,8 +100,14 @@ void CBasicGameRunner::RunGame()
             }
 
             // Update world.
-            if (m_updateCallback) {
-                m_updateCallback();
+            {
+                if (m_updateCallback) {
+                    m_updateCallback();
+                }
+                // Playgrounds.
+                if (!m_playgrounds.empty()) {
+                    m_playgrounds.front()->Update();
+                }
             }
         }
 
@@ -100,8 +116,14 @@ void CBasicGameRunner::RunGame()
         ClearBackground(m_backgroundColor);
         BeginMode2D(m_camera);
         // Draw world.
-        if (m_drawWorldCallback) {
-            m_drawWorldCallback();
+        {
+            if (m_drawWorldCallback) {
+                m_drawWorldCallback();
+            }
+            // Playgrounds.
+            if (!m_playgrounds.empty()) {
+                m_playgrounds.front()->DrawWorld();
+            }
         }
         EndMode2D();
         EndTextureMode();
@@ -113,8 +135,14 @@ void CBasicGameRunner::RunGame()
         // Draw UI.
         {
             // Draw UI.
-            if (m_drawUiCallback) {
-                m_drawUiCallback();
+            {
+                if (m_drawUiCallback) {
+                    m_drawUiCallback();
+                }
+                // Playgrounds.
+                if (!m_playgrounds.empty()) {
+                    m_playgrounds.front()->DrawUi();
+                }
             }
 
             // Keyboard info.
@@ -149,8 +177,14 @@ void CBasicGameRunner::RunGame()
     }
 
     // De-Initialize.
-    if (m_deInitCallback) {
-        m_deInitCallback();
+    {
+        if (m_deInitCallback) {
+            m_deInitCallback();
+        }
+        // Playgrounds.
+        for (const auto& p : m_playgrounds) {
+            p->DeInit();
+        }
     }
 
     CloseWindow();
@@ -242,6 +276,67 @@ CBasicGameRunner& CBasicGameRunner::ResetCamera()
     m_camera.rotation = 0.0f;
     m_camera.zoom = 1.0f;
     return *this;
+}
+CBasicGameRunner& CBasicGameRunner::AddPlayground(std::unique_ptr<playground::IPlayground>&& playground)
+{
+    m_playgrounds.emplace_back(std::move(playground));
+    return *this;
+}
+
+CBasicGameRunner& CBasicGameRunner::NextPlayground()
+{
+    const size_t size = m_playgrounds.size();
+    if (size > 1) {
+        std::ranges::rotate(m_playgrounds, m_playgrounds.begin() + 1);
+    }
+    if (size > 0) {
+        m_playgrounds.front()->Init();
+    }
+    return *this;
+}
+CBasicGameRunner& CBasicGameRunner::PreviousPlayground()
+{
+
+    const size_t size = m_playgrounds.size();
+    if (size > 1) {
+        std::ranges::rotate(m_playgrounds, m_playgrounds.end() - 1);
+    }
+    if (size > 0) {
+        m_playgrounds.front()->Init();
+    }
+    return *this;
+}
+
+CBasicGameRunner& CBasicGameRunner::AddService(std::unique_ptr<IService>&& service)
+{
+    assert(service != nullptr);
+    const auto name = std::string(service->GetName());
+    assert(m_services.contains(name));
+    m_services[name] = std::move(service);
+    return *this;
+}
+
+CBasicGameRunner& CBasicGameRunner::AddManager(std::unique_ptr<IManager>&& manager)
+{
+    assert(manager != nullptr);
+    const auto name = std::string(manager->GetName());
+    assert(!m_managers.contains(name));
+    m_managers[std::string(manager->GetName())] = std::move(manager);
+    return *this;
+}
+
+IService& CBasicGameRunner::GetService(const std::string_view& serviceName)
+{
+    const auto it = m_services.find(serviceName.data());
+    assert(it != m_services.end());
+    return *it->second;
+}
+
+IManager& CBasicGameRunner::GetManager(const std::string_view& managerName)
+{
+    const auto it = m_managers.find(managerName.data());
+    assert(it != m_managers.end());
+    return *it->second;
 }
 
 int32_t CBasicGameRunner::GetWindowWidth() const

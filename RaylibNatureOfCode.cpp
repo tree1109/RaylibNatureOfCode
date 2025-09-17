@@ -1,35 +1,15 @@
 ﻿#include <raylib.h>
-#include <raymath.h>
 
-#include <algorithm>
-#include <array>
-#include <vector>
-#include <deque>
-#include <set>
-#include <map>
-#include <unordered_set>
-#include <unordered_map>
-#include <cmath>
-#include <concepts>
-#include <cstdint>
 #include <format>
 #include <functional>
-#include <iostream>
-#include <memory>
-#include <numbers>
-#include <numeric>
-#include <random>
-#include <stdexcept>
-#include <string>
-#include <utility>
-#include <filesystem>
+#include <type_traits>
 
+#include "playground/PlaygroundExample.h"
+#include "playground/IPlayground.h"
 #include "utility/BasicGameRunner.h"
-#include "utility/Math.h"
-#include "utility/Tool.h"
 
-// Template for the main function.
-int32_t main()
+// Template playground.
+void NormalPlayground()
 {
     CBasicGameRunner game;
 
@@ -64,6 +44,34 @@ int32_t main()
         .SetDrawWorldCallback(drawWorld)
         .SetDrawUiCallback(drawUi)
         .RunGame();
+}
+
+namespace
+{
+    template <typename T>
+    concept PlaygroundType = std::is_base_of_v<playground::IPlayground, T>;
+
+    template <PlaygroundType T>
+    void AddPlayground(CBasicGameRunner& game)
+    {
+        game.AddPlayground(std::make_unique<T>(game));
+    }
+}
+
+int32_t main()
+{
+    CBasicGameRunner game;
+
+    // Service.
+
+    // Manager.
+
+
+    // Playground.
+    AddPlayground<playground::CPlaygroundExample>(game);
+
+    // Set callbacks and run the game.
+    game.RunGame();
 
     return 0;
 }
