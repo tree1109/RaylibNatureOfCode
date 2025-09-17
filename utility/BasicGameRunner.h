@@ -41,11 +41,13 @@ public:
     CBasicGameRunner& SetDrawWorldCallback(std::function<void()>&& drawWorldCallback);
     CBasicGameRunner& SetDrawUiCallback(std::function<void()>&& drawUiCallback);
 
+    CBasicGameRunner& ResetSettingsToDefault();
     CBasicGameRunner& SetGameTitle(const std::string& title);
     CBasicGameRunner& SetGameFPS(const int32_t targetFPS);
     CBasicGameRunner& SetDrawCameraInfo(const bool isDrawCameraInfo);
     CBasicGameRunner& SetDrawFPS(const bool isDrawFPS);
-    CBasicGameRunner& SetBackgroundColor(const Color& color);
+    CBasicGameRunner& SetBackgroundColor(const Color& color) override;
+    CBasicGameRunner& SetClearBackgroundEachFrame(const bool isClear) override;
 
     CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info);
     CBasicGameRunner& SetInfoFontColor(const Color& color);
@@ -83,6 +85,8 @@ private:
     bool m_isGameRunning = true;
     bool m_isDrawCameraInfo = false;
     bool m_isDrawFPS = true;
+    bool m_isClearBackgroundEachFrame = true;
+    bool m_flagClearBackgroundFirstFrame = true;
 
     std::function<void()> m_initCallback;
     std::function<void()> m_deInitCallback;

@@ -4,8 +4,9 @@
 #include <functional>
 #include <type_traits>
 
-#include "playground/PlaygroundExample.h"
 #include "playground/IPlayground.h"
+#include "playground/Playground1.h"
+#include "playground/PlaygroundExample.h"
 #include "utility/BasicGameRunner.h"
 
 // Template playground.
@@ -63,15 +64,37 @@ int32_t main()
     CBasicGameRunner game;
 
     // Service.
+    {
+
+    }
 
     // Manager.
+    {
 
+    }
 
     // Playground.
-    AddPlayground<playground::CPlaygroundExample>(game);
+    {
+        AddPlayground<playground::CPlaygroundExample>(game);
+        AddPlayground<playground::CPlayground1>(game);
+    }
+
+    // Switch playground.
+    const auto& update = [&]() {
+        if (IsKeyPressed(KEY_LEFT)) {
+            game.PreviousPlayground();
+        }
+        else if (IsKeyPressed(KEY_RIGHT)) {
+            game.NextPlayground();
+        }
+    };
+
+    // Info.
+    game.AddKeyboardControlsInfo("[<-/->]: Switch Playground");
 
     // Set callbacks and run the game.
-    game.RunGame();
+    game.SetUpdateCallback(update)
+        .RunGame();
 
     return 0;
 }

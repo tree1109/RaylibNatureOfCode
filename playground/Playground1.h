@@ -1,15 +1,15 @@
-#ifndef INCLUDE_PLAYGROUND_EXAMPLE_H
-#define INCLUDE_PLAYGROUND_EXAMPLE_H
+#ifndef INCLUDE_PLAYGROUND_1_H
+#define INCLUDE_PLAYGROUND_1_H
 
-#include "IGame.h"
 #include "IPlayground.h"
+#include "IGame.h"
 
 namespace playground
 {
-    class CPlaygroundExample final : public IPlayground
+    class CPlayground1 final : public IPlayground
     {
     public:
-        explicit CPlaygroundExample(IGame& game);
+        explicit CPlayground1(IGame& game);
 
     public:
         void Init() override;
@@ -20,7 +20,8 @@ namespace playground
 
     private:
         IGame& m_game;
+
     };
 } // namespace playground
 
-#endif // INCLUDE_PLAYGROUND_EXAMPLE_H
+#endif // INCLUDE_PLAYGROUND_1_H

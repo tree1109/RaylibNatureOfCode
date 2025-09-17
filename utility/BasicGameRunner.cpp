@@ -34,7 +34,7 @@ void CBasicGameRunner::RunGame()
     SetTargetFPS(m_windowTargetFPS);
 
     // Texture data.
-    auto canvas = LoadRenderTexture(m_windowWidth, m_windowHeight);
+    const auto canvas = LoadRenderTexture(m_windowWidth, m_windowHeight);
     const Rectangle sourceRectangle{
         0.0f,
         0.0f,
@@ -75,7 +75,7 @@ void CBasicGameRunner::RunGame()
                 }
 
                 // Zoom based on mouse wheel
-                float wheel = GetMouseWheelMove();
+                const float wheel = GetMouseWheelMove();
                 if (!FloatEquals(wheel, 0.0f)) {
                     // Get the world point that is under the mouse
                     const Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), m_camera);
@@ -113,7 +113,10 @@ void CBasicGameRunner::RunGame()
 
         // Draw to canvas.
         BeginTextureMode(canvas);
-        ClearBackground(m_backgroundColor);
+        if (m_isClearBackgroundEachFrame || m_flagClearBackgroundFirstFrame) {
+            ClearBackground(m_backgroundColor);
+            m_flagClearBackgroundFirstFrame = false;
+        }
         BeginMode2D(m_camera);
         // Draw world.
         {
@@ -224,6 +227,16 @@ CBasicGameRunner& CBasicGameRunner::SetDrawUiCallback(std::function<void()>&& dr
     m_drawUiCallback = std::move(drawUiCallback);
     return *this;
 }
+CBasicGameRunner& CBasicGameRunner::ResetSettingsToDefault()
+{
+    m_isGameRunning = true;
+    m_isDrawCameraInfo = false;
+    m_isDrawFPS = true;
+    m_isClearBackgroundEachFrame = true;
+    m_backgroundColor = RAYWHITE;
+    m_infoFontColor = BLACK;
+    return *this;
+}
 
 CBasicGameRunner& CBasicGameRunner::SetGameTitle(const std::string& title)
 {
@@ -256,6 +269,11 @@ CBasicGameRunner & CBasicGameRunner::SetBackgroundColor(const Color &color)
     m_backgroundColor = color;
     return *this;
 }
+CBasicGameRunner& CBasicGameRunner::SetClearBackgroundEachFrame(const bool isClear)
+{
+    m_isClearBackgroundEachFrame = isClear;
+    return *this;
+}
 
 CBasicGameRunner& CBasicGameRunner::AddKeyboardControlsInfo(std::string&& info)
 {
@@ -285,6 +303,8 @@ CBasicGameRunner& CBasicGameRunner::AddPlayground(std::unique_ptr<playground::IP
 
 CBasicGameRunner& CBasicGameRunner::NextPlayground()
 {
+    ResetSettingsToDefault();
+    m_flagClearBackgroundFirstFrame = true;
     const size_t size = m_playgrounds.size();
     if (size > 1) {
         std::ranges::rotate(m_playgrounds, m_playgrounds.begin() + 1);
@@ -296,7 +316,8 @@ CBasicGameRunner& CBasicGameRunner::NextPlayground()
 }
 CBasicGameRunner& CBasicGameRunner::PreviousPlayground()
 {
-
+    ResetSettingsToDefault();
+    m_flagClearBackgroundFirstFrame = true;
     const size_t size = m_playgrounds.size();
     if (size > 1) {
         std::ranges::rotate(m_playgrounds, m_playgrounds.end() - 1);
