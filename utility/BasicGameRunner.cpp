@@ -66,6 +66,12 @@ void CBasicGameRunner::RunGame()
     while (!WindowShouldClose() && m_isGameRunning) {
         // Update.
         {
+            // Update time.
+            {
+                m_time = GetTime();
+                m_frameTime = GetFrameTime();
+            }
+
             // Update camera.
             {
                 // Translate based on mouse right click
@@ -406,4 +412,14 @@ Vector2 CBasicGameRunner::GetMouseWorldPosition() const
     const auto mousePos = GetMousePosition();
     const auto mouseWorldPos = GetScreenToWorld2D(mousePos, m_camera);
     return mouseWorldPos;
+}
+
+double CBasicGameRunner::GetTime() const
+{
+    return m_time;
+}
+
+float CBasicGameRunner::GetFrameTime() const
+{
+    return m_frameTime;
 }

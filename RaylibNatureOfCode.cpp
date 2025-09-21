@@ -20,44 +20,6 @@
 #include "playground/PlaygroundExample.h"
 #include "utility/BasicGameRunner.h"
 
-// Template playground.
-void NormalPlayground()
-{
-    CBasicGameRunner game;
-
-    const auto center = game.GetWindowCenterPosition();
-
-    // Init here.
-    auto init = [&]() {
-    };
-
-    // DeInit here.
-    auto deInit = [&]() {
-    };
-
-    // Update logic here
-    auto update = [&] {
-    };
-
-    // Draw world here
-    auto drawWorld = [&] {
-        const double time = GetTime();
-        const float deltaTime = GetFrameTime();
-    };
-
-    // Draw UI here
-    auto drawUi = [&] {
-    };
-
-    // Set callbacks and run the game.
-    game.SetInitCallback(init)
-        .SetDeInitCallback(deInit)
-        .SetUpdateCallback(update)
-        .SetDrawWorldCallback(drawWorld)
-        .SetDrawUiCallback(drawUi)
-        .RunGame();
-}
-
 namespace
 {
     template <typename T>

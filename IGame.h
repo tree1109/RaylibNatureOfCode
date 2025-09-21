@@ -20,10 +20,15 @@ public:
     virtual IGame& SetBackgroundColor(const Color& color) = 0;
     virtual IGame& SetClearBackgroundEachFrame(const bool isClear) = 0;
 
+    virtual IGame& AddKeyboardControlsInfo(std::string&& info);
+    virtual IGame& SetInfoFontColor(const Color& color);
+
     [[nodiscard]] virtual int32_t GetWindowWidth() const = 0;
     [[nodiscard]] virtual int32_t GetWindowHeight() const = 0;
     [[nodiscard]] virtual Vector2 GetWindowCenterPosition() const = 0;
     [[nodiscard]] virtual Vector2 GetMouseWorldPosition() const = 0;
+    [[nodiscard]] virtual double GetTime() const = 0;
+    [[nodiscard]] virtual float GetFrameTime() const = 0;
 
 public:
     template <typename T>

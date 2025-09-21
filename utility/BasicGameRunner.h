@@ -17,7 +17,6 @@ namespace playground
     class IPlayground;
 }
 
-
 class CBasicGameRunner final : public IGame
 {
 public:
@@ -50,8 +49,8 @@ public:
     CBasicGameRunner& SetClearBackgroundEachFrame(const bool isClear) override;
     CBasicGameRunner& SetCanMoveCameraByMouse(const bool isCanMove);
 
-    CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info);
-    CBasicGameRunner& SetInfoFontColor(const Color& color);
+    CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info) override;
+    CBasicGameRunner& SetInfoFontColor(const Color& color) override;
 
     CBasicGameRunner& ResetCamera();
 
@@ -69,6 +68,8 @@ public:
     [[nodiscard]] int32_t GetWindowHeight() const override;
     [[nodiscard]] Vector2 GetWindowCenterPosition() const override;
     [[nodiscard]] Vector2 GetMouseWorldPosition() const override;
+    [[nodiscard]] double GetTime() const override;
+    [[nodiscard]] float GetFrameTime() const override;
 
 private:
     std::string m_windowTitle = "Raylib - Nature of Code";
@@ -82,6 +83,9 @@ private:
     std::vector<std::string> m_keyboardControlsInfo;
 
     Camera2D m_camera{};
+
+    double m_time = 0.0;
+    float m_frameTime = 0.0f;
 
     bool m_isGameRunning = true;
     bool m_isDrawCameraInfo = false;
