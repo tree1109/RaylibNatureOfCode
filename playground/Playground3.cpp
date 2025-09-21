@@ -224,4 +224,8 @@ namespace playground
     void CPlayground3::DrawUi()
     {
     }
+
+    std::string_view CPlayground3::GetName() const {
+        return "Playground 3 - Forces and Motion";
+    }
 } // namespace playground

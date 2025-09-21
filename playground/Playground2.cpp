@@ -132,4 +132,9 @@ namespace playground
     void CPlayground2::DrawUi()
     {
     }
+
+    std::string_view CPlayground2::GetName() const
+    {
+        return "Playground 2 - Vectors and Acceleration";
+    }
 } // namespace playground

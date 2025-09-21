@@ -66,4 +66,9 @@ namespace playground
     void CPlayground1::DrawUi()
     {
     }
+
+    std::string_view CPlayground1::GetName() const
+    {
+        return "Playground 1 - Random Walker";
+    }
 } // namespace playground

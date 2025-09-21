@@ -69,7 +69,7 @@ void CBasicGameRunner::RunGame()
             // Update camera.
             {
                 // Translate based on mouse right click
-                if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+                if (m_isCanMoveCameraByMouse && IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
                     Vector2 delta = GetMouseDelta();
                     delta = Vector2Scale(delta, -1.0f / m_camera.zoom);
                     m_camera.target = Vector2Add(m_camera.target, delta);
@@ -170,6 +170,18 @@ void CBasicGameRunner::RunGame()
                 DrawText(TextFormat("Camera Target: (%.2f, %.2f)", m_camera.target.x, m_camera.target.y), 10, 120, 20,
                          BLACK);
                 DrawText(TextFormat("Camera Zoom: %.2f", m_camera.zoom), 10, 140, 20, BLACK);
+            }
+
+            // Playground info.
+            {
+                // Show name at the bottom left.
+                const int32_t fontSize = 20;
+                const Color fontColor = m_infoFontColor;
+                const int32_t textXAlignment = 10;
+                const int32_t textYPos = m_windowHeight - 30;
+                const std::string_view name = m_playgrounds.empty() ?
+                    "None" : m_playgrounds.front()->GetName();
+                DrawText(TextFormat("Current playground: %s", name), textXAlignment, textYPos, fontSize, fontColor);
             }
 
             // Draw FPS.
@@ -277,6 +289,12 @@ CBasicGameRunner & CBasicGameRunner::SetBackgroundColor(const Color &color)
 CBasicGameRunner& CBasicGameRunner::SetClearBackgroundEachFrame(const bool isClear)
 {
     m_isClearBackgroundEachFrame = isClear;
+    return *this;
+}
+
+CBasicGameRunner& CBasicGameRunner::SetCanMoveCameraByMouse(const bool isCanMove)
+{
+    m_isCanMoveCameraByMouse = isCanMove;
     return *this;
 }
 

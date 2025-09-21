@@ -33,4 +33,9 @@ namespace playground
     void CPlayground8::DrawUi()
     {
     }
+
+    std::string_view CPlayground8::GetName() const
+    {
+        return "Playground 8";
+    }
 } // namespace playground

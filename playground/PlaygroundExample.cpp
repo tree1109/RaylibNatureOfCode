@@ -31,4 +31,8 @@ namespace playground
         const auto& [x, y] = m_game.GetWindowCenterPosition();
         DrawText("UwU", x, y, 40, RED);
     }
+
+    std::string_view CPlaygroundExample::GetName() const {
+        return "Playground Example";
+    }
 } // namespace playground

@@ -48,6 +48,7 @@ public:
     CBasicGameRunner& SetDrawFPS(const bool isDrawFPS);
     CBasicGameRunner& SetBackgroundColor(const Color& color) override;
     CBasicGameRunner& SetClearBackgroundEachFrame(const bool isClear) override;
+    CBasicGameRunner& SetCanMoveCameraByMouse(const bool isCanMove);
 
     CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info);
     CBasicGameRunner& SetInfoFontColor(const Color& color);
@@ -86,6 +87,7 @@ private:
     bool m_isDrawCameraInfo = false;
     bool m_isDrawFPS = true;
     bool m_isClearBackgroundEachFrame = true;
+    bool m_isCanMoveCameraByMouse = false;
     bool m_flagClearBackgroundFirstFrame = true;
 
     std::function<void()> m_initCallback;

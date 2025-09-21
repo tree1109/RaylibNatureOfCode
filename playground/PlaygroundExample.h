@@ -18,6 +18,8 @@ namespace playground
         void DrawWorld() override;
         void DrawUi() override;
 
+        [[nodiscard]] std::string_view GetName() const override;
+
     private:
         IGame& m_game;
     };
