@@ -24,8 +24,8 @@ CBasicGameRunner::CBasicGameRunner(const int32_t width, const int32_t height, co
     , m_windowHeight(height)
     , m_windowTargetFPS(targetFPS)
 {
-    AddKeyboardControlsInfo("Keyboard Controls");
-    AddKeyboardControlsInfo("R - Reset Camera");
+    AddStaticKeyboardControlsInfo("Keyboard Controls");
+    AddStaticKeyboardControlsInfo("R - Reset Camera");
 }
 
 void CBasicGameRunner::RunGame()
@@ -74,30 +74,32 @@ void CBasicGameRunner::RunGame()
 
             // Update camera.
             {
-                // Translate based on mouse right click
-                if (m_isCanMoveCameraByMouse && IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-                    Vector2 delta = GetMouseDelta();
-                    delta = Vector2Scale(delta, -1.0f / m_camera.zoom);
-                    m_camera.target = Vector2Add(m_camera.target, delta);
-                }
+                if (m_isCanMoveCameraByMouse) {
+                    // Translate based on mouse right click
+                    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+                        Vector2 delta = GetMouseDelta();
+                        delta = Vector2Scale(delta, -1.0f / m_camera.zoom);
+                        m_camera.target = Vector2Add(m_camera.target, delta);
+                    }
 
-                // Zoom based on mouse wheel
-                const float wheel = GetMouseWheelMove();
-                if (!FloatEquals(wheel, 0.0f)) {
-                    // Get the world point that is under the mouse
-                    const Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), m_camera);
+                    // Zoom based on mouse wheel
+                    const float wheel = GetMouseWheelMove();
+                    if (!FloatEquals(wheel, 0.0f)) {
+                        // Get the world point that is under the mouse
+                        const Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), m_camera);
 
-                    // Set the offset to where the mouse is
-                    m_camera.offset = GetMousePosition();
+                        // Set the offset to where the mouse is
+                        m_camera.offset = GetMousePosition();
 
-                    // Set the target to match, so that the camera maps the world space point 
-                    // under the cursor to the screen space point under the cursor at any zoom
-                    m_camera.target = mouseWorldPos;
+                        // Set the target to match, so that the camera maps the world space point
+                        // under the cursor to the screen space point under the cursor at any zoom
+                        m_camera.target = mouseWorldPos;
 
-                    // Zoom increment
-                    // Uses log scaling to provide consistent zoom speed
-                    const float scale = 0.2f * wheel;
-                    m_camera.zoom = Clamp(expf(logf(m_camera.zoom) + scale), 0.125f, 64.0f);
+                        // Zoom increment
+                        // Uses log scaling to provide consistent zoom speed
+                        const float scale = 0.2f * wheel;
+                        m_camera.zoom = Clamp(expf(logf(m_camera.zoom) + scale), 0.125f, 64.0f);
+                    }
                 }
 
                 // Reset camera if 'R' key is pressed
@@ -156,17 +158,24 @@ void CBasicGameRunner::RunGame()
             }
 
             // Keyboard info.
-            for (int32_t i = 0; const std::string& info : m_keyboardControlsInfo) {
-                constexpr int32_t fontSize = 20;
-                const Color fontColor = m_infoFontColor;
+            {
 
-                constexpr int32_t textXAlignment = 10;
-                constexpr int32_t textYStartPos = 40;
-                constexpr int32_t textYSpacing = 20;
+                for (int32_t i = 0; i < m_staticKeyboardControlsInfo.size() + m_keyboardControlsInfo.size(); ++i) {
+                    const std::string& info = i < m_staticKeyboardControlsInfo.size() ?
+                        m_staticKeyboardControlsInfo[i] :
+                        m_keyboardControlsInfo[i - m_staticKeyboardControlsInfo.size()];
 
-                const int32_t textYPos = textYStartPos + i * textYSpacing;
-                DrawText(info.c_str(), textXAlignment, textYPos, fontSize, fontColor);
-                ++i;
+                    constexpr int32_t fontSize = 20;
+                    const Color fontColor = m_infoFontColor;
+
+                    constexpr int32_t textXAlignment = 10;
+                    constexpr int32_t textYStartPos = 40;
+                    constexpr int32_t textYSpacing = 20;
+
+                    const int32_t textYPos = textYStartPos + i * textYSpacing;
+                    DrawText(info.c_str(), textXAlignment, textYPos, fontSize, fontColor);
+                    ++i;
+                }
             }
 
             // Camera info.
@@ -258,6 +267,9 @@ CBasicGameRunner& CBasicGameRunner::ResetSettingsToDefault()
     m_isClearBackgroundEachFrame = true;
     m_backgroundColor = RAYWHITE;
     m_infoFontColor = BLACK;
+
+    m_keyboardControlsInfo.clear();
+
     return *this;
 }
 
@@ -301,6 +313,12 @@ CBasicGameRunner& CBasicGameRunner::SetClearBackgroundEachFrame(const bool isCle
 CBasicGameRunner& CBasicGameRunner::SetCanMoveCameraByMouse(const bool isCanMove)
 {
     m_isCanMoveCameraByMouse = isCanMove;
+    return *this;
+}
+
+CBasicGameRunner& CBasicGameRunner::AddStaticKeyboardControlsInfo(std::string&& info)
+{
+    m_staticKeyboardControlsInfo.emplace_back(std::move(info));
     return *this;
 }
 

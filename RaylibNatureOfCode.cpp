@@ -74,7 +74,7 @@ int32_t main()
     };
 
     // Info.
-    game.AddKeyboardControlsInfo("[<-/->]: Switch Playground");
+    game.AddStaticKeyboardControlsInfo("[<-/->]: Switch Playground");
 
     // Set callbacks and run the game.
     game.SetUpdateCallback(update)

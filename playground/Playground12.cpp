@@ -45,6 +45,7 @@ namespace playground
 
         randomField = {100.0f};
 
+        textureManager.UnloadTextures();
         const auto fireImage = tool::GenerateBlurCircleImage(WHITE, 0.1f);
         textureManager.LoadTexture("fire", fireImage);
 

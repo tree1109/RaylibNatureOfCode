@@ -49,6 +49,7 @@ public:
     CBasicGameRunner& SetClearBackgroundEachFrame(const bool isClear) override;
     CBasicGameRunner& SetCanMoveCameraByMouse(const bool isCanMove);
 
+    CBasicGameRunner& AddStaticKeyboardControlsInfo(std::string&& info) override;
     CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info) override;
     CBasicGameRunner& SetInfoFontColor(const Color& color) override;
 
@@ -80,6 +81,7 @@ private:
     Color m_backgroundColor = RAYWHITE;
     Color m_infoFontColor = BLACK;
 
+    std::vector<std::string> m_staticKeyboardControlsInfo;
     std::vector<std::string> m_keyboardControlsInfo;
 
     Camera2D m_camera{};

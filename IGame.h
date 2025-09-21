@@ -20,8 +20,9 @@ public:
     virtual IGame& SetBackgroundColor(const Color& color) = 0;
     virtual IGame& SetClearBackgroundEachFrame(const bool isClear) = 0;
 
-    virtual IGame& AddKeyboardControlsInfo(std::string&& info);
-    virtual IGame& SetInfoFontColor(const Color& color);
+    virtual IGame& AddStaticKeyboardControlsInfo(std::string&& info) = 0;
+    virtual IGame& AddKeyboardControlsInfo(std::string&& info) = 0;
+    virtual IGame& SetInfoFontColor(const Color& color) = 0;
 
     [[nodiscard]] virtual int32_t GetWindowWidth() const = 0;
     [[nodiscard]] virtual int32_t GetWindowHeight() const = 0;
