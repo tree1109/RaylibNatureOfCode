@@ -89,6 +89,8 @@ namespace playground
 
     void CPlayground2::Init()
     {
+        m_game.AddKeyboardControlsInfo("Mouse move - Position of target");
+
         const auto& center = m_game.GetWindowCenterPosition();
         for (auto& mover : movers) {
             mover.m_position = center;

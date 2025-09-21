@@ -1,6 +1,7 @@
 #include "Playground10.h"
 
 #include <deque>
+#include <format>
 
 #include "raymath.h"
 #include "utility/Math.h"
@@ -146,10 +147,13 @@ namespace playground
 
     void CPlayground10::Init()
     {
+        m_game.AddKeyboardControlsInfo("Left click - Drag pendulum");
+
         const auto& center = m_game.GetWindowCenterPosition();
 
         pendulum = {center, 200.0f};
         doublePendulum = {center, 100.0f, {-PI * 0.25f, -PI * 0.125f}};
+        trace.clear();
     }
 
     void CPlayground10::DeInit()
@@ -185,6 +189,11 @@ namespace playground
 
     void CPlayground10::DrawUi()
     {
+        const size_t traceSize = trace.size();
+
+        // Particle count.
+        const auto text = std::format("Trace Count: {}", traceSize);
+        DrawText(text.c_str(), 10, 240, 20, BLACK);
     }
 
     std::string_view CPlayground10::GetName() const

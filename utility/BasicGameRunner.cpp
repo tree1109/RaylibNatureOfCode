@@ -60,6 +60,10 @@ void CBasicGameRunner::RunGame()
         for (const auto& manager : m_managers | std::views::values) {
             manager->Init();
         }
+        // Playgrounds.
+        if (!m_playgrounds.empty()) {
+            m_playgrounds.front()->Init();
+        }
     }
 
     // Update loop.
@@ -159,11 +163,13 @@ void CBasicGameRunner::RunGame()
 
             // Keyboard info.
             {
+                std::vector<std::string> allInfo;
+                allInfo.reserve(m_staticKeyboardControlsInfo.size() + m_keyboardControlsInfo.size());
+                allInfo.insert(allInfo.end(), m_staticKeyboardControlsInfo.begin(), m_staticKeyboardControlsInfo.end());
+                allInfo.insert(allInfo.end(), m_keyboardControlsInfo.begin(), m_keyboardControlsInfo.end());
 
-                for (int32_t i = 0; i < m_staticKeyboardControlsInfo.size() + m_keyboardControlsInfo.size(); ++i) {
-                    const std::string& info = i < m_staticKeyboardControlsInfo.size() ?
-                        m_staticKeyboardControlsInfo[i] :
-                        m_keyboardControlsInfo[i - m_staticKeyboardControlsInfo.size()];
+                for (int32_t i = 0; i < allInfo.size(); ++i) {
+                    const std::string& info = allInfo[i];
 
                     constexpr int32_t fontSize = 20;
                     const Color fontColor = m_infoFontColor;
@@ -174,7 +180,6 @@ void CBasicGameRunner::RunGame()
 
                     const int32_t textYPos = textYStartPos + i * textYSpacing;
                     DrawText(info.c_str(), textXAlignment, textYPos, fontSize, fontColor);
-                    ++i;
                 }
             }
 
@@ -265,6 +270,7 @@ CBasicGameRunner& CBasicGameRunner::ResetSettingsToDefault()
     m_isDrawCameraInfo = false;
     m_isDrawFPS = true;
     m_isClearBackgroundEachFrame = true;
+    m_isCanMoveCameraByMouse = false;
     m_backgroundColor = RAYWHITE;
     m_infoFontColor = BLACK;
 
@@ -350,8 +356,7 @@ CBasicGameRunner& CBasicGameRunner::AddPlayground(std::unique_ptr<playground::IP
 
 CBasicGameRunner& CBasicGameRunner::NextPlayground()
 {
-    ResetSettingsToDefault();
-    m_flagClearBackgroundFirstFrame = true;
+    InitForPlayground();
     const size_t size = m_playgrounds.size();
     if (size > 1) {
         std::ranges::rotate(m_playgrounds, m_playgrounds.begin() + 1);
@@ -363,8 +368,7 @@ CBasicGameRunner& CBasicGameRunner::NextPlayground()
 }
 CBasicGameRunner& CBasicGameRunner::PreviousPlayground()
 {
-    ResetSettingsToDefault();
-    m_flagClearBackgroundFirstFrame = true;
+    InitForPlayground();
     const size_t size = m_playgrounds.size();
     if (size > 1) {
         std::ranges::rotate(m_playgrounds, m_playgrounds.end() - 1);
@@ -440,4 +444,11 @@ double CBasicGameRunner::GetTime() const
 float CBasicGameRunner::GetFrameTime() const
 {
     return m_frameTime;
+}
+
+void CBasicGameRunner::InitForPlayground()
+{
+    ResetSettingsToDefault();
+    ResetCamera();
+    m_flagClearBackgroundFirstFrame = true;
 }

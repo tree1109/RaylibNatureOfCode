@@ -10,6 +10,7 @@ namespace playground
 
     void CPlaygroundExample::Init()
     {
+        m_game.SetCanMoveCameraByMouse(true);
     }
 
     void CPlaygroundExample::DeInit()
@@ -28,8 +29,7 @@ namespace playground
 
     void CPlaygroundExample::DrawUi()
     {
-        const auto& [x, y] = m_game.GetWindowCenterPosition();
-        DrawText("UwU", x, y, 40, RED);
+
     }
 
     std::string_view CPlaygroundExample::GetName() const {

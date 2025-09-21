@@ -124,10 +124,10 @@ namespace playground
 
         // Particle count.
         const auto text = std::format("Particle Count: {}", totalParticleCount);
-        DrawText(text.c_str(), 10, 200, 20, BLACK);
+        DrawText(text.c_str(), 10, 240, 20, BLACK);
         // Vector capacity.
         const auto capacityText = std::format("Particle Capacity: {}", totalCapacity);
-        DrawText(capacityText.c_str(), 10, 220, 20, BLACK);
+        DrawText(capacityText.c_str(), 10, 260, 20, BLACK);
     }
 
     std::string_view CPlayground11::GetName() const

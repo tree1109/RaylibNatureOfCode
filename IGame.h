@@ -19,6 +19,7 @@ public:
 
     virtual IGame& SetBackgroundColor(const Color& color) = 0;
     virtual IGame& SetClearBackgroundEachFrame(const bool isClear) = 0;
+    virtual IGame& SetCanMoveCameraByMouse(const bool isCanMove) = 0;
 
     virtual IGame& AddStaticKeyboardControlsInfo(std::string&& info) = 0;
     virtual IGame& AddKeyboardControlsInfo(std::string&& info) = 0;

@@ -91,6 +91,9 @@ namespace playground
 
     void CPlayground7::Init()
     {
+        m_game.AddKeyboardControlsInfo("Mouse - Ship direction")
+            .AddKeyboardControlsInfo("Left Click - Thrust");
+
         const auto& center = m_game.GetWindowCenterPosition();
         mover = SpaceShip(center);
         ballPosition = center;

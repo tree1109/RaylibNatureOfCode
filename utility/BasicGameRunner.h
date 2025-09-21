@@ -47,7 +47,7 @@ public:
     CBasicGameRunner& SetDrawFPS(const bool isDrawFPS);
     CBasicGameRunner& SetBackgroundColor(const Color& color) override;
     CBasicGameRunner& SetClearBackgroundEachFrame(const bool isClear) override;
-    CBasicGameRunner& SetCanMoveCameraByMouse(const bool isCanMove);
+    CBasicGameRunner& SetCanMoveCameraByMouse(const bool isCanMove) override;
 
     CBasicGameRunner& AddStaticKeyboardControlsInfo(std::string&& info) override;
     CBasicGameRunner& AddKeyboardControlsInfo(std::string&& info) override;
@@ -71,6 +71,9 @@ public:
     [[nodiscard]] Vector2 GetMouseWorldPosition() const override;
     [[nodiscard]] double GetTime() const override;
     [[nodiscard]] float GetFrameTime() const override;
+
+private:
+    void InitForPlayground();
 
 private:
     std::string m_windowTitle = "Raylib - Nature of Code";

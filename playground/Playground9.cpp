@@ -201,6 +201,9 @@ namespace playground
 
     void CPlayground9::Init()
     {
+        m_game.AddKeyboardControlsInfo("Left click - Drag center ball")
+            .AddKeyboardControlsInfo("Right click - Drag ball chain");
+
         const auto& center = m_game.GetWindowCenterPosition();
 
         // Spring const.
@@ -214,6 +217,8 @@ namespace playground
 
         // Spring chain.
         chainStarPos = center + Vector2{-100.0f, -100.0f};
+        movers.clear();
+        springs.clear();
         {
             constexpr int32_t chainLength = 10;
             constexpr float chainRestLength = 30.0f;
