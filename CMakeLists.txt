@@ -1,5 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.10)
-project("RaylibNatureOfCode" LANGUAGES CXX C)
+cmake_minimum_required (VERSION 3.10)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -10,62 +9,6 @@ if (POLICY CMP0141)
     set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-# Raylib setup.
-set(RAYLIB_VERSION 5.5)
-find_package(raylib ${RAYLIB_VERSION} QUIET) # QUIET or REQUIRED
-if (NOT raylib_FOUND) # If there's none, fetch and build raylib
-    include(FetchContent)
-    FetchContent_Declare(
-        raylib
-        DOWNLOAD_EXTRACT_TIMESTAMP OFF
-        URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
-    )
-    FetchContent_GetProperties(raylib)
-    if (NOT raylib_POPULATED) # Have we downloaded raylib yet?
-        set(FETCHCONTENT_QUIET NO)
-        FetchContent_MakeAvailable(raylib)
-        set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples
-    endif()
-endif()
+project("RaylibNatureOfCode" LANGUAGES CXX C)
 
-macro(RaylibOtherPlatform EXECUTABLE_NAME)
-    # Web Configurations
-    if (${PLATFORM} STREQUAL "Web")
-        set_target_properties(${EXECUTABLE_NAME} PROPERTIES SUFFIX ".html") # Tell Emscripten to build an example.html file.
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY -s GL_ENABLE_GET_PROC_ADDRESS=1")
-    endif()
-
-    # Checks if OSX and links appropriate frameworks (Only required on MacOS)
-    if (APPLE)
-        target_link_libraries(${EXECUTABLE_NAME} "-framework IOKit")
-        target_link_libraries(${EXECUTABLE_NAME} "-framework Cocoa")
-        target_link_libraries(${EXECUTABLE_NAME} "-framework OpenGL")
-    endif()
-endmacro()
-
-# My function.
-function(MyAddExecutable EXECUTABLE_NAME)
-    add_executable (${EXECUTABLE_NAME} "${EXECUTABLE_NAME}.cpp" ${ARGN})
-    target_link_libraries(${EXECUTABLE_NAME} raylib)
-endfunction()
-
-# Set include paths.
-include_directories(${PROJECT_SOURCE_DIR})
-# All source files.
-file(GLOB UTILITY_SRC_CPP "${PROJECT_SOURCE_DIR}/utility/*.cpp")
-file(GLOB GAME_OBJECT_SRC_CPP "${PROJECT_SOURCE_DIR}/game_object/*.cpp")
-file(GLOB PLAYGROUND_SRC_CPP "${PROJECT_SOURCE_DIR}/playground/*.cpp")
-file(GLOB MANAGER_SRC_CPP "${PROJECT_SOURCE_DIR}/manager/*.cpp")
-file(GLOB SERVICE_SRC_CPP "${PROJECT_SOURCE_DIR}/service/*.cpp")
-set(SOURCE_FILES
-    ${UTILITY_SRC_CPP}
-    ${GAME_OBJECT_SRC_CPP}
-    ${PLAYGROUND_SRC_CPP}
-    ${MANAGER_SRC_CPP}
-    ${SERVICE_SRC_CPP}
-)
-
-# Main executable.
-MyAddExecutable(${PROJECT_NAME} ${SOURCE_FILES})
-RaylibOtherPlatform(${PROJECT_NAME})
-message(STATUS "Add executable: ${PROJECT_NAME}")
+add_subdirectory(PlaygroundViewer)
