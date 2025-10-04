@@ -1,7 +1,12 @@
-﻿# Raylib setup.
+﻿# Note: I need use stb_perlin.h inside raylib.
+set(USE_DOWNLOAD_RAYLIB ON)
+
+# Raylib setup.
 set(RAYLIB_VERSION 5.5)
-find_package(raylib ${RAYLIB_VERSION} QUIET) # QUIET or REQUIRED
-if (NOT raylib_FOUND) # If there's none, fetch and build raylib
+if (NOT USE_DOWNLOAD_RAYLIB)
+    find_package(raylib ${RAYLIB_VERSION} QUIET) # QUIET or REQUIRED
+endif()
+if (USE_DOWNLOAD_RAYLIB OR NOT raylib_FOUND) # If there's none, fetch and build raylib
     include(FetchContent)
     FetchContent_Declare(
         raylib
@@ -18,7 +23,7 @@ endif()
 
 macro(RaylibOtherPlatform EXECUTABLE_NAME)
     # Web Configurations
-    if (${PLATFORM} STREQUAL "Web")
+    if (PLATFORM STREQUAL "Web")
         set_target_properties(${EXECUTABLE_NAME} PROPERTIES SUFFIX ".html") # Tell Emscripten to build an example.html file.
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY -s GL_ENABLE_GET_PROC_ADDRESS=1")
     endif()

@@ -3,7 +3,7 @@
 #include <random>
 #include <numbers>
 
-#include "raymath.h"
+#include <raymath.h>
 
 #include "external/stb_perlin.h"
 
