@@ -61,6 +61,7 @@ int32_t main()
         AddPlayground<playground::CPlayground10>(game);
         AddPlayground<playground::CPlayground11>(game);
         AddPlayground<playground::CPlayground12>(game);
+        AddPlayground<playground::CPlayground12>(game);
     }
 
     // Switch playground.

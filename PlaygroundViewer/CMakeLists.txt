@@ -38,27 +38,16 @@ endmacro()
 
 # My function.
 function(MyAddExecutable EXECUTABLE_NAME)
-    add_executable (${EXECUTABLE_NAME} "${EXECUTABLE_NAME}.cpp" ${ARGN})
-    target_link_libraries(${EXECUTABLE_NAME} raylib)
+
 endfunction()
 
-# Set include paths.
-include_directories(.)
 # All source files.
-file(GLOB UTILITY_SRC_CPP "utility/*.cpp")
-file(GLOB GAME_OBJECT_SRC_CPP "game_object/*.cpp")
-file(GLOB PLAYGROUND_SRC_CPP "playground/*.cpp")
-file(GLOB MANAGER_SRC_CPP "manager/*.cpp")
-file(GLOB SERVICE_SRC_CPP "service/*.cpp")
-set(SOURCE_FILES
-    ${UTILITY_SRC_CPP}
-    ${GAME_OBJECT_SRC_CPP}
-    ${PLAYGROUND_SRC_CPP}
-    ${MANAGER_SRC_CPP}
-    ${SERVICE_SRC_CPP}
-)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.cpp")
 
-# Main executable.
-MyAddExecutable(${PROJECT_NAME} ${SOURCE_FILES})
+# Add target.
+add_executable (${PROJECT_NAME} ${SOURCE_FILES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+
+# Link raylib
+target_link_libraries(${PROJECT_NAME} raylib)
 RaylibOtherPlatform(${PROJECT_NAME})
-message(STATUS "Add executable: ${PROJECT_NAME}")
