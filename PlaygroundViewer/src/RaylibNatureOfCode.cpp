@@ -6,6 +6,10 @@
 
 #include "playground/IPlayground.h"
 #include "playground/Playground1.h"
+#include "playground/Playground10.h"
+#include "playground/Playground11.h"
+#include "playground/Playground12.h"
+#include "playground/Playground13.h"
 #include "playground/Playground2.h"
 #include "playground/Playground3.h"
 #include "playground/Playground4.h"
@@ -14,9 +18,6 @@
 #include "playground/Playground7.h"
 #include "playground/Playground8.h"
 #include "playground/Playground9.h"
-#include "playground/Playground10.h"
-#include "playground/Playground11.h"
-#include "playground/Playground12.h"
 #include "playground/PlaygroundExample.h"
 #include "utility/BasicGameRunner.h"
 
@@ -61,7 +62,7 @@ int32_t main()
         AddPlayground<playground::CPlayground10>(game);
         AddPlayground<playground::CPlayground11>(game);
         AddPlayground<playground::CPlayground12>(game);
-        AddPlayground<playground::CPlayground12>(game);
+        AddPlayground<playground::CPlayground13>(game);
     }
 
     // Switch playground.
