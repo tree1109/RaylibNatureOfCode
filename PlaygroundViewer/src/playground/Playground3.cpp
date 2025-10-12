@@ -156,15 +156,15 @@ namespace
 
 namespace playground
 {
-    CPlayground3::CPlayground3(IGame& game) : m_game(game)
+    CPlayground3::CPlayground3(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground3::Init()
     {
-        const int32_t windowWidth = m_game.GetWindowWidth();
-        const int32_t windowHeight = m_game.GetWindowHeight();
-        const auto& center = m_game.GetWindowCenterPosition();
+        const int32_t windowWidth = GetGame().GetWindowWidth();
+        const int32_t windowHeight = GetGame().GetWindowHeight();
+        const auto& center = GetGame().GetWindowCenterPosition();
 
         for (int32_t i = 0; i < 100; ++i) {
             Vector2 pos = Vector2(GetRandomValue(0, windowWidth), GetRandomValue(0, windowHeight));

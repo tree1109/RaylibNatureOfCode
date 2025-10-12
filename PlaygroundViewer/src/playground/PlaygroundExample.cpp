@@ -4,13 +4,13 @@
 
 namespace playground
 {
-    CPlaygroundExample::CPlaygroundExample(IGame& game) : m_game(game)
+    CPlaygroundExample::CPlaygroundExample(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlaygroundExample::Init()
     {
-        m_game.SetCanMoveCameraByMouse(true);
+        GetGame().SetCanMoveCameraByMouse(true);
     }
 
     void CPlaygroundExample::DeInit()
@@ -23,7 +23,7 @@ namespace playground
 
     void CPlaygroundExample::DrawWorld()
     {
-        const auto& [x, y] = m_game.GetWindowCenterPosition();
+        const auto& [x, y] = GetGame().GetWindowCenterPosition();
         DrawText("This is example", x, y, 20, PINK);
     }
 

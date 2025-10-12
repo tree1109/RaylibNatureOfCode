@@ -1,12 +1,11 @@
 #ifndef INCLUDE_PLAYGROUND_1_H
 #define INCLUDE_PLAYGROUND_1_H
 
-#include "IPlayground.h"
-#include "IGame.h"
+#include "PlaygroundBase.h"
 
 namespace playground
 {
-    class CPlayground1 final : public IPlayground
+    class CPlayground1 final : public CPlaygroundBase
     {
     public:
         explicit CPlayground1(IGame& game);
@@ -19,10 +18,6 @@ namespace playground
         void DrawUi() override;
 
         [[nodiscard]] std::string_view GetName() const override;
-
-    private:
-        IGame& m_game;
-
     };
 } // namespace playground
 

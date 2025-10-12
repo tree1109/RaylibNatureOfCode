@@ -39,14 +39,14 @@ namespace
 
 namespace playground
 {
-    CPlayground1::CPlayground1(IGame& game) : m_game(game)
+    CPlayground1::CPlayground1(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground1::Init()
     {
-        m_game.SetClearBackgroundEachFrame(false);
-        walker = Walker(m_game.GetWindowCenterPosition());
+        GetGame().SetClearBackgroundEachFrame(false);
+        walker = Walker(GetGame().GetWindowCenterPosition());
     }
 
     void CPlayground1::DeInit()

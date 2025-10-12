@@ -85,16 +85,16 @@ namespace
 
 namespace playground
 {
-    CPlayground7::CPlayground7(IGame& game) : m_game(game)
+    CPlayground7::CPlayground7(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground7::Init()
     {
-        m_game.AddKeyboardControlsInfo("Mouse - Ship direction")
+        GetGame().AddKeyboardControlsInfo("Mouse - Ship direction")
             .AddKeyboardControlsInfo("Left Click - Thrust");
 
-        const auto& center = m_game.GetWindowCenterPosition();
+        const auto& center = GetGame().GetWindowCenterPosition();
         mover = SpaceShip(center);
         ballPosition = center;
     }
@@ -105,8 +105,8 @@ namespace playground
 
     void CPlayground7::Update()
     {
-        const double time = m_game.GetTime();
-        const auto& center = m_game.GetWindowCenterPosition();
+        const double time = GetGame().GetTime();
+        const auto& center = GetGame().GetWindowCenterPosition();
 
         const Vector2 mouseDirection = GetMousePosition() - mover.m_position;
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {

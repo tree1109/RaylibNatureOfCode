@@ -83,14 +83,14 @@ namespace
 
 namespace playground
 {
-    CPlayground6::CPlayground6(IGame& game) : m_game(game)
+    CPlayground6::CPlayground6(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground6::Init()
     {
-        const float width = m_game.GetWindowWidth();
-        const float height = m_game.GetWindowHeight();
+        const float width = GetGame().GetWindowWidth();
+        const float height = GetGame().GetWindowHeight();
 
         for (int32_t i = 0; i < 100; ++i) {
             Vector2 pos = Vector2(GetRandomValue(0, width), GetRandomValue(0, height));

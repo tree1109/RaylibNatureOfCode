@@ -141,15 +141,15 @@ namespace
 
 namespace playground
 {
-    CPlayground10::CPlayground10(IGame& game) : m_game(game)
+    CPlayground10::CPlayground10(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground10::Init()
     {
-        m_game.AddKeyboardControlsInfo("Left click - Drag pendulum");
+        GetGame().AddKeyboardControlsInfo("Left click - Drag pendulum");
 
-        const auto& center = m_game.GetWindowCenterPosition();
+        const auto& center = GetGame().GetWindowCenterPosition();
 
         pendulum = {center, 200.0f};
         doublePendulum = {center, 100.0f, {-PI * 0.25f, -PI * 0.125f}};

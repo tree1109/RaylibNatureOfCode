@@ -94,15 +94,15 @@ namespace
 
 namespace playground
 {
-    CPlayground5::CPlayground5(IGame& game) : m_game(game)
+    CPlayground5::CPlayground5(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground5::Init()
     {
-        const float width = m_game.GetWindowWidth();
-        const float height = m_game.GetWindowHeight();
-        const auto& center = m_game.GetWindowCenterPosition();
+        const float width = GetGame().GetWindowWidth();
+        const float height = GetGame().GetWindowHeight();
+        const auto& center = GetGame().GetWindowCenterPosition();
         // Random.
         if (false) {
             for (int32_t i = 0; i < 100; ++i) {

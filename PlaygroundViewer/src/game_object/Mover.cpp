@@ -28,23 +28,24 @@ void CMover::Update()
 
 void CMover::Draw() const
 {
-    // Triangle size
-    constexpr float length = 30.0f; // Distance from center to tip
-    constexpr float width = 20.0f; // Width of the base
+    // Triangle parameters
+    constexpr float length = 20.0f;     // From center to tip
+    constexpr float baseBack = 12.0f;   // How far the base center is behind the center
+    constexpr float halfWidth = 8.0f;   // Half width of the base
 
-    // Calculate the tip of the triangle (front)
-    const Vector2 tip = {m_position.x + length * cosf(m_rotation), m_position.y + length * sinf(m_rotation)};
+    // Forward and right vectors from rotation
+    const Vector2 forward = {cosf(m_rotation), sinf(m_rotation)};
+    const Vector2 right = {-sinf(m_rotation), cosf(m_rotation)};
 
-    // Calculate the two base points (back left and back right)
-    const float baseAngle = m_rotation + PI; // Opposite direction
-    constexpr float halfWidth = width * 0.5f;
-    const Vector2 left = {m_position.x + halfWidth * cosf(baseAngle + PI * 0.5f),
-                          m_position.y + halfWidth * sinf(baseAngle + PI * 0.5f)};
-    const Vector2 right = {m_position.x + halfWidth * cosf(baseAngle - PI * 0.5f),
-                           m_position.y + halfWidth * sinf(baseAngle - PI * 0.5f)};
+    // Compute vertices
+    const Vector2 center = m_position;
+    const Vector2 tip = center + forward * length;
+    const Vector2 baseCenter = center - forward * baseBack;
+    const Vector2 left = baseCenter - right * halfWidth;
+    const Vector2 rightPt = baseCenter + right * halfWidth;
 
-    // Draw the triangle
-    DrawTriangleLines(tip, left, right, RED);
+    // Draw oriented triangle representing direction
+    DrawTriangleLines(tip, left, rightPt, RED);
 }
 
 const Vector2& CMover::GetPosition() const

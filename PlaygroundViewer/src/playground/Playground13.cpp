@@ -13,7 +13,7 @@ namespace
 namespace playground
 {
     CPlayground13::CPlayground13(IGame& game)
-        : m_game(game)
+        : CPlaygroundBase(game)
     {
 
     }
@@ -21,7 +21,7 @@ namespace playground
     void CPlayground13::Init()
     {
         // Get center.
-        const auto& center = m_game.GetWindowCenterPosition();
+        const auto& center = GetGame().GetWindowCenterPosition();
         vehicle = CMover();
         vehicle.SetPosition(center);
     }
@@ -33,7 +33,7 @@ namespace playground
     void CPlayground13::Update()
     {
         // Use mouse as target.
-        const auto& mousePosition = m_game.GetMouseWorldPosition();
+        const auto& mousePosition = GetGame().GetMouseWorldPosition();
         {
             const auto& target = mousePosition;
             const auto desired = target - vehicle.GetPosition();
@@ -47,7 +47,7 @@ namespace playground
     void CPlayground13::DrawWorld()
     {
         {
-            const auto& mousePosition = m_game.GetMouseWorldPosition();
+            const auto& mousePosition = GetGame().GetMouseWorldPosition();
             DrawCircleV(mousePosition, 10.0f, RED);
         }
 

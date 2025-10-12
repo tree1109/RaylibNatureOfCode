@@ -83,15 +83,15 @@ namespace
 
 namespace playground
 {
-    CPlayground2::CPlayground2(IGame& game) : m_game(game)
+    CPlayground2::CPlayground2(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground2::Init()
     {
-        m_game.AddKeyboardControlsInfo("Mouse move - Position of target");
+        GetGame().AddKeyboardControlsInfo("Mouse move - Position of target");
 
-        const auto& center = m_game.GetWindowCenterPosition();
+        const auto& center = GetGame().GetWindowCenterPosition();
         for (auto& mover : movers) {
             mover.m_position = center;
         }

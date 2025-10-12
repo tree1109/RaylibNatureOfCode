@@ -32,13 +32,13 @@ namespace
 
 namespace playground
 {
-    CPlayground12::CPlayground12(IGame& game) : m_game(game)
+    CPlayground12::CPlayground12(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground12::Init()
     {
-        m_game.SetBackgroundColor(BLACK)
+        GetGame().SetBackgroundColor(BLACK)
             .SetInfoFontColor(RAYWHITE)
             .AddKeyboardControlsInfo("E - Clear Emitters")
             .AddKeyboardControlsInfo("Left Click - Blow wind according mouse position");
@@ -49,7 +49,7 @@ namespace playground
         const auto fireImage = tool::GenerateBlurCircleImage(WHITE, 0.1f);
         textureManager.LoadTexture("fire", fireImage);
 
-        Reset(m_game);
+        Reset(GetGame());
     }
 
     void CPlayground12::DeInit()
@@ -60,7 +60,7 @@ namespace playground
     void CPlayground12::Update()
     {
         if (IsKeyPressed(KEY_E)) {
-            Reset(m_game);
+            Reset(GetGame());
         }
 
         // Wind force.

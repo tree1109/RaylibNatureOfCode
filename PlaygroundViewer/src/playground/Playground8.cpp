@@ -74,14 +74,14 @@ namespace
 
 namespace playground
 {
-    CPlayground8::CPlayground8(IGame& game) : m_game(game)
+    CPlayground8::CPlayground8(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground8::Init()
     {
-        const float width = m_game.GetWindowWidth();
-        const auto& center = m_game.GetWindowCenterPosition();
+        const float width = GetGame().GetWindowWidth();
+        const auto& center = GetGame().GetWindowCenterPosition();
 
         // Random.
         for (int32_t i = 0; i < 10; ++i) {
@@ -119,8 +119,8 @@ namespace playground
 
     void CPlayground8::Update()
     {
-        const float width = m_game.GetWindowWidth();
-        const auto& center = m_game.GetWindowCenterPosition();
+        const float width = GetGame().GetWindowWidth();
+        const auto& center = GetGame().GetWindowCenterPosition();
 
         for (auto& oscillator : oscillators) {
             oscillator.Update();
@@ -163,7 +163,7 @@ namespace playground
 
     void CPlayground8::DrawWorld()
     {
-        const float height = m_game.GetWindowHeight();
+        const float height = GetGame().GetWindowHeight();
 
         for (const auto& oscillator : oscillators) {
             oscillator.Draw();

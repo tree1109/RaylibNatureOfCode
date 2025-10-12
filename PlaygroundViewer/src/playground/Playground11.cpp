@@ -23,13 +23,13 @@ namespace
 
 namespace playground
 {
-    CPlayground11::CPlayground11(IGame& game) : m_game(game)
+    CPlayground11::CPlayground11(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground11::Init()
     {
-        m_game.SetBackgroundColor(GRAY)
+        GetGame().SetBackgroundColor(GRAY)
             .AddKeyboardControlsInfo("Q - Create Attractor at mouse position")
             .AddKeyboardControlsInfo("W - Create Repeller at mouse position")
             .AddKeyboardControlsInfo("E - Clear Emitters")
@@ -37,7 +37,7 @@ namespace playground
             .AddKeyboardControlsInfo("Left Click - Create emitter at mouse position");
 
 
-        const auto& center = m_game.GetWindowCenterPosition();
+        const auto& center = GetGame().GetWindowCenterPosition();
 
         // Add initial emitter.
         AddInitEmitter(center);
@@ -49,8 +49,8 @@ namespace playground
 
     void CPlayground11::Update()
     {
-        const auto& center = m_game.GetWindowCenterPosition();
-        const auto& mousePosition = m_game.GetMouseWorldPosition();
+        const auto& center = GetGame().GetWindowCenterPosition();
+        const auto& mousePosition = GetGame().GetMouseWorldPosition();
 
         // Emitter.
         {

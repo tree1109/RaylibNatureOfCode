@@ -118,15 +118,15 @@ namespace
 
 namespace playground
 {
-    CPlayground4::CPlayground4(IGame& game) : m_game(game)
+    CPlayground4::CPlayground4(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground4::Init()
     {
-        const float width = m_game.GetWindowWidth();
-        const float height = m_game.GetWindowHeight();
-        const auto& center = m_game.GetWindowCenterPosition();
+        const float width = GetGame().GetWindowWidth();
+        const float height = GetGame().GetWindowHeight();
+        const auto& center = GetGame().GetWindowCenterPosition();
 
         for (int32_t i = 0; i < 100; ++i) {
             Vector2 pos = Vector2(GetRandomValue(0, width), GetRandomValue(0, height));

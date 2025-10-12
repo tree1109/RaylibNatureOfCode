@@ -195,16 +195,16 @@ namespace
 
 namespace playground
 {
-    CPlayground9::CPlayground9(IGame& game) : m_game(game)
+    CPlayground9::CPlayground9(IGame& game) : CPlaygroundBase(game)
     {
     }
 
     void CPlayground9::Init()
     {
-        m_game.AddKeyboardControlsInfo("Left click - Drag center ball")
+        GetGame().AddKeyboardControlsInfo("Left click - Drag center ball")
             .AddKeyboardControlsInfo("Right click - Drag ball chain");
 
-        const auto& center = m_game.GetWindowCenterPosition();
+        const auto& center = GetGame().GetWindowCenterPosition();
 
         // Spring const.
         anchorPos = center;
