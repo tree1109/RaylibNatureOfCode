@@ -5,6 +5,7 @@
 #include "Mover.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include "raymath.h"
 

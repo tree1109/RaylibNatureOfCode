@@ -1,6 +1,7 @@
 #include "Playground11.h"
 
 #include <format>
+#include <numeric>
 
 #include "game_object/Attractor.h"
 #include "game_object/Emitter.h"

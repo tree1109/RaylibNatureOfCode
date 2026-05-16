@@ -2,6 +2,7 @@
 #define INCLUDE_I_GAME_H
 
 #include <raylib.h>
+#include <string>
 #include <string_view>
 
 class IService;

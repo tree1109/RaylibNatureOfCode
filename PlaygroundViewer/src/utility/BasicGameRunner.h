@@ -5,6 +5,7 @@
 
 #include <raylib.h>
 #include <functional>
+#include <memory>
 #include <string>
 
 #include "IGame.h"
